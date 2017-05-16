@@ -1,6 +1,7 @@
 package com.linyuzai.kotlinextension
 
 import android.util.Base64
+import com.linyuzai.kotlinextension.u.OnlyForAndroid
 import kotlin.experimental.or
 
 fun ByteArray.toHexString(): String? {

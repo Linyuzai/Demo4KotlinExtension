@@ -1,4 +1,4 @@
-package com.linyuzai.kotlinextension.store
+package com.linyuzai.kotlinextension.m
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,14 +9,14 @@ import com.linyuzai.kotlinextension.serialize
  * Created by Administrator on 2017/5/2 0002.
  * @author linyuzai
  */
-internal object Shared : IShared {
+internal object KShared : IShared {
     internal var context: Context? = null
     private val prefs by lazy {
         context!!.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE)
     }
 
     @SuppressLint("CommitPrefEdits")
-    override fun <T : Any> put(key: String, value: T?) =
+    override fun <T : Any> put(key: String, value: T?): IShared =
             with(prefs.edit()) {
                 when (value) {
                     is Long -> putLong(key, value)
@@ -27,6 +27,7 @@ internal object Shared : IShared {
                     else -> putString(key, value?.serialize())
                 }
                 apply()
+                this@KShared
             }
 
     override fun <T> get(key: String): T? = get(key, null)
@@ -44,23 +45,25 @@ internal object Shared : IShared {
                 }
             }
 
-    override fun remove(key: String) {
+    override fun remove(key: String): IShared {
         prefs.edit().remove(key).apply()
+        return this
     }
 
-    override fun clear() {
+    override fun clear(): IShared {
         prefs.edit().clear().apply()
+        return this
     }
 }
 
 interface IShared {
-    fun <T : Any> put(key: String, value: T?)
+    fun <T : Any> put(key: String, value: T?): IShared
 
     fun <T> get(key: String): T?
 
     fun <T> get(key: String, defValue: T?): T?
 
-    fun remove(key: String)
+    fun remove(key: String): IShared
 
-    fun clear()
+    fun clear(): IShared
 }

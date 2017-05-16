@@ -1,4 +1,4 @@
-package com.linyuzai.kotlinextension.store
+package com.linyuzai.kotlinextension.m
 
 import java.util.concurrent.ConcurrentHashMap
 
@@ -7,10 +7,11 @@ import java.util.concurrent.ConcurrentHashMap
  * @author linyuzai
  */
 @Suppress("UNCHECKED_CAST")
-internal object Memory : IMemory {
+internal object KMemory : IMemory {
     private val map: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
-    override fun <T> put(key: String, value: T?) {
+    override fun <T> put(key: String, value: T?): IMemory {
         map[key] = value as Any
+        return this
     }
 
     override fun <T> get(key: String): T? = map[key] as T
@@ -19,7 +20,7 @@ internal object Memory : IMemory {
 }
 
 interface IMemory {
-    fun <T> put(key: String, value: T?)
+    fun <T> put(key: String, value: T?): IMemory
 
     fun <T> get(key: String): T?
 

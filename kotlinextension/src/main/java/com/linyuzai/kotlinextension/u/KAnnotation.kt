@@ -1,4 +1,4 @@
-package com.linyuzai.kotlinextension
+package com.linyuzai.kotlinextension.u
 
 /**
  * Only for Android

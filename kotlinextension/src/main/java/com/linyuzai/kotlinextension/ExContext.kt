@@ -1,10 +1,10 @@
 package com.linyuzai.kotlinextension
 
 import android.content.Context
-import com.linyuzai.kotlinextension.store.IShared
-import com.linyuzai.kotlinextension.store.Shared
+import com.linyuzai.kotlinextension.m.IShared
+import com.linyuzai.kotlinextension.m.KShared
 
 fun Context.shared(): IShared {
-    Shared.context = applicationContext
-    return Shared
+    KShared.context = applicationContext
+    return KShared
 }
