@@ -4,7 +4,11 @@ import android.content.Context
 import com.linyuzai.kotlinextension.m.IShared
 import com.linyuzai.kotlinextension.m.KShared
 
+fun Context.bind() {
+    KShared.bind(applicationContext)
+}
+
 fun Context.shared(): IShared {
-    KShared.context = applicationContext
+    bind()
     return KShared
 }

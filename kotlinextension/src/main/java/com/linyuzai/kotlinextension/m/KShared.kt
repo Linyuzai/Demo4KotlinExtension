@@ -2,6 +2,7 @@ package com.linyuzai.kotlinextension.m
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.SharedPreferences
 import com.linyuzai.kotlinextension.deserialize
 import com.linyuzai.kotlinextension.serialize
 
@@ -10,14 +11,22 @@ import com.linyuzai.kotlinextension.serialize
  * @author linyuzai
  */
 internal object KShared : IShared {
-    internal var context: Context? = null
-    private val prefs by lazy {
-        context!!.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE)
+    private val PREFIX: String = "_"
+    private val SIZE: String = "_size"
+    internal var prefs: SharedPreferences? = null
+
+    fun bind(context: Context){
+        if (prefs == null) {
+            synchronized(KShared.javaClass) {
+                if (prefs == null)
+                    prefs = context.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE)
+            }
+        }
     }
 
     @SuppressLint("CommitPrefEdits")
-    override fun <T : Any> put(key: String, value: T?): IShared =
-            with(prefs.edit()) {
+    override fun <T> put(key: String, value: T?): IShared =
+            with(prefs!!.edit()) {
                 when (value) {
                     is Long -> putLong(key, value)
                     is String -> putString(key, value)
@@ -30,11 +39,18 @@ internal object KShared : IShared {
                 this@KShared
             }
 
+    override fun <T> putList(key: String, list: List<T>?): IShared {
+        put("$PREFIX$key$SIZE", list?.size)
+        for (i in list!!.indices)
+            put("$PREFIX$key$PREFIX$i", list[i])
+        return this
+    }
+
     override fun <T> get(key: String): T? = get(key, null)
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> get(key: String, defValue: T?): T? =
-            with(prefs) {
+            with(prefs!!) {
                 when (defValue) {
                     is Long -> getLong(key, defValue) as T
                     is String -> getString(key, defValue) as T
@@ -45,25 +61,47 @@ internal object KShared : IShared {
                 }
             }
 
+    override fun <T> getList(key: String): List<T>? {
+        val count: Int? = get("$PREFIX$key$SIZE", 0)
+        val list: ArrayList<T> = ArrayList(count!!)
+        for (i in list.indices)
+            list[i] = get<T>("$PREFIX$key$PREFIX$i")!!
+        return list
+    }
+
     override fun remove(key: String): IShared {
-        prefs.edit().remove(key).apply()
+        prefs!!.edit().remove(key).apply()
+        return this
+    }
+
+    override fun removeList(key: String): IShared {
+        val count: Int? = get("$PREFIX$key$SIZE", 0)
+        for (i in 0..count!!)
+            remove("$PREFIX$key$PREFIX$i")
+        remove("$PREFIX$key$SIZE")
         return this
     }
 
     override fun clear(): IShared {
-        prefs.edit().clear().apply()
+        prefs!!.edit().clear().apply()
         return this
     }
 }
 
 interface IShared {
-    fun <T : Any> put(key: String, value: T?): IShared
+    fun <T> put(key: String, value: T?): IShared
+
+    fun <T> putList(key: String, list: List<T>?): IShared
 
     fun <T> get(key: String): T?
 
     fun <T> get(key: String, defValue: T?): T?
 
+    fun <T> getList(key: String): List<T>?
+
     fun remove(key: String): IShared
+
+    fun removeList(key: String): IShared
 
     fun clear(): IShared
 }

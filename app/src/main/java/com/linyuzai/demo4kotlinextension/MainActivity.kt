@@ -2,8 +2,9 @@ package com.linyuzai.demo4kotlinextension
 
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Color
+
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import com.linyuzai.kotlinextension.*
 
@@ -25,5 +26,17 @@ class MainActivity : Activity() {
 
         setStatusBarColorRes(R.color.colorAccent)
         setStatusBarTranslucent()
+
+        shared().putList("key", arrayListOf<String>())
+
+        onClick(View.OnClickListener {
+            when (it.id) {
+
+            }
+        }, button, button)
+
+        shared().memory().shared().memory()
+
+        log().enable()
     }
 }

@@ -1,8 +1,14 @@
 package com.linyuzai.kotlinextension
 
+import android.view.View
+import com.linyuzai.kotlinextension.c.IHandler
 import com.linyuzai.kotlinextension.c.KHandler
 import com.linyuzai.kotlinextension.m.IMemory
+import com.linyuzai.kotlinextension.m.IShared
 import com.linyuzai.kotlinextension.m.KMemory
+import com.linyuzai.kotlinextension.m.KShared
+import com.linyuzai.kotlinextension.u.ILog
+import com.linyuzai.kotlinextension.u.KLog
 import com.linyuzai.kotlinextension.u.OnlyForAndroid
 import com.linyuzai.kotlinextension.v.IAnim
 import com.linyuzai.kotlinextension.v.IView
@@ -36,13 +42,25 @@ fun Any.serialize(): String? =
 
 fun Any.memory(): IMemory = KMemory
 
+@OnlyForAndroid
+fun Any.shared(): IShared = KShared
+
+@OnlyForAndroid
 fun Any.view(): IView = KView
 
+@OnlyForAndroid
 fun Any.anim(): IAnim = KAnim
 
 @OnlyForAndroid
-fun Any.run(runnable: Runnable) = KHandler.post(runnable)
+fun Any.log(): ILog = KLog
 
 @OnlyForAndroid
-fun Any.run(name: String, runnable: Runnable) = KHandler.run(name, runnable)
+fun Any.handler(): IHandler = KHandler
+
+@OnlyForAndroid
+fun Any.onClick(listener: View.OnClickListener, vararg views: View?) = views.forEach { it?.setOnClickListener(listener) }
+
+@OnlyForAndroid
+fun Any.onLongClick(listener: View.OnLongClickListener, vararg views: View?) = views.forEach { it?.setOnLongClickListener(listener) }
+
 
