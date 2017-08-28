@@ -29,12 +29,6 @@ class MainActivity : Activity() {
 
         shared().putList("key", arrayListOf<String>())
 
-        onClick(View.OnClickListener {
-            when (it.id) {
-
-            }
-        }, button, button)
-
         shared().memory().shared().memory()
 
         log().enable()

@@ -17,6 +17,7 @@ private class StatusBarView : View {
 
     constructor(context: Context) : super(context)
 }
+
 internal object KStatusBar {
 
     val DEFAULT_STATUS_BAR_ALPHA = 112
@@ -29,7 +30,8 @@ internal object KStatusBar {
      * *
      * @param statusBarAlpha 状态栏透明度
      */
-    @JvmOverloads fun setColor(activity: Activity, color: Int, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
+    @JvmOverloads
+    fun setColor(activity: Activity, color: Int, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
@@ -93,7 +95,8 @@ internal object KStatusBar {
      * *
      * @param statusBarAlpha 状态栏透明度
      */
-    @JvmOverloads fun setTranslucent(activity: Activity, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
+    @JvmOverloads
+    fun setTranslucent(activity: Activity, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return
         }
@@ -154,7 +157,8 @@ internal object KStatusBar {
      * *
      * @param statusBarAlpha 状态栏透明度
      */
-    @JvmOverloads fun setColorForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, color: Int, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
+    @JvmOverloads
+    fun setColorForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, color: Int, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return
         }
@@ -229,7 +233,8 @@ internal object KStatusBar {
      * *
      * @param drawerLayout DrawerLayout
      */
-    @JvmOverloads fun setTranslucentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
+    @JvmOverloads
+    fun setTranslucentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
             return
         }

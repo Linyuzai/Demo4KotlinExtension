@@ -13,11 +13,11 @@ import com.linyuzai.kotlinextension.serialize
 internal object KShared : IShared {
     private val PREFIX: String = "_"
     private val SIZE: String = "_size"
-    internal var prefs: SharedPreferences? = null
+    private var prefs: SharedPreferences? = null
 
-    fun bind(context: Context){
+    fun bind(context: Context) {
         if (prefs == null) {
-            synchronized(KShared.javaClass) {
+            synchronized(KShared::class.java) {
                 if (prefs == null)
                     prefs = context.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE)
             }

@@ -12,10 +12,7 @@ import android.view.View
 import android.widget.LinearLayout
 import com.linyuzai.kotlinextension.c.IHandler
 import com.linyuzai.kotlinextension.c.KHandler
-import com.linyuzai.kotlinextension.m.IMemory
-import com.linyuzai.kotlinextension.m.IShared
-import com.linyuzai.kotlinextension.m.KMemory
-import com.linyuzai.kotlinextension.m.KShared
+import com.linyuzai.kotlinextension.m.*
 import com.linyuzai.kotlinextension.u.ILog
 import com.linyuzai.kotlinextension.u.KLog
 import com.linyuzai.kotlinextension.u.OnlyForAndroid
@@ -53,6 +50,9 @@ fun Any.serialize(): String? =
 fun Any.memory(): IMemory = KMemory
 
 @OnlyForAndroid
+fun Any.res(): IResource = KResource
+
+@OnlyForAndroid
 fun Any.shared(): IShared = KShared
 
 @OnlyForAndroid
@@ -67,8 +67,5 @@ fun Any.log(): ILog = KLog
 @OnlyForAndroid
 fun Any.handler(): IHandler = KHandler
 
-@OnlyForAndroid
-fun Any.onClick(listener: View.OnClickListener, vararg views: View?) = views.forEach { it?.setOnClickListener(listener) }
 
-@OnlyForAndroid
-fun Any.onLongClick(listener: View.OnLongClickListener, vararg views: View?) = views.forEach { it?.setOnLongClickListener(listener) }
+
