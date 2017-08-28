@@ -1,5 +1,6 @@
 package com.linyuzai.kotlinextension.v
 
+import android.animation.Animator
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.view.View
@@ -13,6 +14,11 @@ import com.linyuzai.kotlinextension.*
 internal object KAnim : IAnim {
     override fun alpha(view: View, from: Float, to: Float, duration: Long): IAnim {
         view.animAlpha(to, from, duration)
+        return this
+    }
+
+    override fun alpha(view: View, from: Float, to: Float, duration: Long, listener: Animator.AnimatorListener?): IAnim {
+        view.animAlpha(to, from, duration, 0, listener)
         return this
     }
 
@@ -94,6 +100,8 @@ internal object KAnim : IAnim {
 
 interface IAnim {
     fun alpha(view: View, from: Float, to: Float, duration: Long): IAnim
+
+    fun alpha(view: View, from: Float, to: Float, duration: Long, listener: Animator.AnimatorListener? = null): IAnim
 
     fun alpha(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
 

@@ -1,6 +1,15 @@
 package com.linyuzai.kotlinextension
 
+import android.animation.ObjectAnimator
+import android.animation.ValueAnimator
+import android.content.Context
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
+import android.support.annotation.RequiresApi
 import android.view.View
+import android.widget.LinearLayout
 import com.linyuzai.kotlinextension.c.IHandler
 import com.linyuzai.kotlinextension.c.KHandler
 import com.linyuzai.kotlinextension.m.IMemory
@@ -14,6 +23,7 @@ import com.linyuzai.kotlinextension.v.IAnim
 import com.linyuzai.kotlinextension.v.IView
 import com.linyuzai.kotlinextension.v.KAnim
 import com.linyuzai.kotlinextension.v.KView
+import junit.framework.Test
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream
@@ -62,5 +72,3 @@ fun Any.onClick(listener: View.OnClickListener, vararg views: View?) = views.for
 
 @OnlyForAndroid
 fun Any.onLongClick(listener: View.OnLongClickListener, vararg views: View?) = views.forEach { it?.setOnLongClickListener(listener) }
-
-
