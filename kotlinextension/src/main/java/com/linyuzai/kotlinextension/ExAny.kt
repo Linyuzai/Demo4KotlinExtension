@@ -11,7 +11,9 @@ import android.support.annotation.RequiresApi
 import android.view.View
 import android.widget.LinearLayout
 import com.linyuzai.kotlinextension.c.IHandler
+import com.linyuzai.kotlinextension.c.IService
 import com.linyuzai.kotlinextension.c.KHandler
+import com.linyuzai.kotlinextension.c.KService
 import com.linyuzai.kotlinextension.m.*
 import com.linyuzai.kotlinextension.u.ILog
 import com.linyuzai.kotlinextension.u.KLog
@@ -66,6 +68,9 @@ fun Any.log(): ILog = KLog
 
 @OnlyForAndroid
 fun Any.handler(): IHandler = KHandler
+
+@OnlyForAndroid
+fun Any.service(): IService = KService
 
 
 
