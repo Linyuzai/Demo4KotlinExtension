@@ -21,7 +21,6 @@ class MainActivity : Activity() {
         startActivity(Intent(this, MainActivity::class.java))
         intent(MainActivity::class)
         view().show(button, button).hide(button)
-        anim().alpha(button, 0.0f, 0.0f, 100)
         //animAlpha(0.0f, 0.0f, 100, button)
 
         setStatusBarColorRes(R.color.colorAccent)
@@ -32,5 +31,7 @@ class MainActivity : Activity() {
         shared().memory().shared().memory()
 
         log().enable()
+
+        anim().builder().with(button).onStart { }.onEnd { }.alpha().start()
     }
 }

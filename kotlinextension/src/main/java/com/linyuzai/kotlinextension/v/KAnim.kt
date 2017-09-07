@@ -1,6 +1,9 @@
 package com.linyuzai.kotlinextension.v
 
 import android.animation.Animator
+import android.animation.ArgbEvaluator
+import android.animation.ObjectAnimator
+import android.animation.TimeInterpolator
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.view.View
@@ -12,124 +15,171 @@ import com.linyuzai.kotlinextension.*
  */
 @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
 internal object KAnim : IAnim {
-    override fun alpha(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animAlpha(to, from, duration)
+
+    override fun builder(): AnimBuilder = AnimBuilder()
+}
+
+class AnimBuilder internal constructor() {
+
+    private var view: View? = null
+
+    private var from: Float = 0f
+
+    private var to: Float = 0f
+
+    private var duration: Long = 0L
+
+    private var delay: Long = 0L
+
+    private var onStart: ((anim: Animator?) -> Unit)? = null
+
+    private var onEnd: ((anim: Animator?) -> Unit)? = null
+
+    private var onCancel: ((anim: Animator?) -> Unit)? = null
+
+    private var onRepeat: ((anim: Animator?) -> Unit)? = null
+
+    private var onPause: ((anim: Animator?) -> Unit)? = null
+
+    private var onResume: ((anim: Animator?) -> Unit)? = null
+
+    private var interpolator: ((input: Float) -> Float)? = null
+
+    private var evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)? = null
+
+
+    fun with(view: View): AnimBuilder {
+        this.view = view
         return this
     }
 
-    override fun alpha(view: View, from: Float, to: Float, duration: Long, listener: Animator.AnimatorListener?): IAnim {
-        view.animAlpha(to, from, duration, 0, listener)
+    fun from(from: Float): AnimBuilder {
+        this.from = from
         return this
     }
 
-    override fun alpha(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animAlpha(to, from, duration, delay)
+    fun to(to: Float): AnimBuilder {
+        this.to = to
         return this
     }
 
-    override fun scaleX(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animScaleX(to, from, duration)
+    fun duration(duration: Long): AnimBuilder {
+        this.duration = duration
         return this
     }
 
-    override fun scaleX(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animScaleX(to, from, duration, delay)
+    fun delay(delay: Long): AnimBuilder {
+        this.delay = delay
         return this
     }
 
-    override fun scaleY(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animScaleY(to, from, duration)
+    fun onStart(onStart: ((anim: Animator?) -> Unit)?): AnimBuilder {
+        this.onStart = onStart
         return this
     }
 
-    override fun scaleY(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animScaleY(to, from, duration, delay)
+    fun onEnd(onEnd: ((anim: Animator?) -> Unit)?): AnimBuilder {
+        this.onEnd = onEnd
         return this
     }
 
-    override fun translationX(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animTranslationX(to, from, duration)
+    fun onCancel(onCancel: ((anim: Animator?) -> Unit)?): AnimBuilder {
+        this.onCancel = onCancel
         return this
     }
 
-    override fun translationX(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animTranslationX(to, from, duration, delay)
+    fun onRepeat(onRepeat: ((anim: Animator?) -> Unit)?): AnimBuilder {
+        this.onRepeat = onRepeat
         return this
     }
 
-    override fun translationY(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animTranslationY(to, from, duration)
+    fun onPause(onPause: ((anim: Animator?) -> Unit)?): AnimBuilder {
+        this.onPause = onPause
         return this
     }
 
-    override fun translationY(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animTranslationY(to, from, duration, delay)
+    fun onResume(onResume: ((anim: Animator?) -> Unit)?): AnimBuilder {
+        this.onResume = onResume
         return this
     }
 
-    override fun rotation(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animRotation(to, from, duration)
+    fun interpolator(interpolator: ((input: Float) -> Float)?): AnimBuilder {
+        this.interpolator = interpolator
         return this
     }
 
-    override fun rotation(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animRotation(to, from, duration, delay)
+    fun <T> evaluator(evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)?): AnimBuilder {
+        this.evaluator = evaluator
         return this
     }
 
-    override fun rotationX(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animRotationX(to, from, duration)
-        return this
-    }
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun alpha(): ObjectAnimator = getAnim("alpha")
 
-    override fun rotationX(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animRotationX(to, from, duration, delay)
-        return this
-    }
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun scaleX(): ObjectAnimator = getAnim("scaleX")
 
-    override fun rotationY(view: View, from: Float, to: Float, duration: Long): IAnim {
-        view.animRotationY(to, from, duration)
-        return this
-    }
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun scaleY(): ObjectAnimator = getAnim("scaleY")
 
-    override fun rotationY(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim {
-        view.animRotationY(to, from, duration, delay)
-        return this
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun translationX(): ObjectAnimator = getAnim("translationX")
+
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun translationY(): ObjectAnimator = getAnim("translationY")
+
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun rotation(): ObjectAnimator = getAnim("rotation")
+
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun rotationX(): ObjectAnimator = getAnim("rotationX")
+
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun rotationY(): ObjectAnimator = getAnim("rotationY")
+
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    private fun getAnim(anim: String): ObjectAnimator {
+        val animator: ObjectAnimator = ObjectAnimator.ofFloat(view, anim, from, to).setDuration(duration)
+        animator.startDelay = delay
+        if (interpolator != null)
+            animator.interpolator = TimeInterpolator { input -> interpolator!!.invoke(input) }
+        if (evaluator != null)
+            animator.setEvaluator { fraction, startValue, endValue -> evaluator!!.invoke(fraction, startValue, endValue) }
+        val listener1: Animator.AnimatorListener = object : Animator.AnimatorListener {
+            override fun onAnimationRepeat(animation: Animator?) {
+                onRepeat?.invoke(animation)
+            }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                onEnd?.invoke(animation)
+            }
+
+            override fun onAnimationCancel(animation: Animator?) {
+                onCancel?.invoke(animation)
+            }
+
+            override fun onAnimationStart(animation: Animator?) {
+                onStart?.invoke(animation)
+            }
+        }
+        val listener2: Animator.AnimatorPauseListener = object : Animator.AnimatorPauseListener {
+            override fun onAnimationPause(animation: Animator?) {
+                onPause?.invoke(animation)
+            }
+
+            override fun onAnimationResume(animation: Animator?) {
+                onResume?.invoke(animation)
+            }
+
+        }
+        animator.addListener(listener1)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            animator.addPauseListener(listener2)
+        }
+        return animator
     }
 }
 
 interface IAnim {
-    fun alpha(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun alpha(view: View, from: Float, to: Float, duration: Long, listener: Animator.AnimatorListener? = null): IAnim
-
-    fun alpha(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
-
-    fun scaleX(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun scaleX(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
-
-    fun scaleY(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun scaleY(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
-
-    fun translationX(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun translationX(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
-
-    fun translationY(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun translationY(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
-
-    fun rotation(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun rotation(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
-
-    fun rotationX(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun rotationX(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
-
-    fun rotationY(view: View, from: Float, to: Float, duration: Long): IAnim
-
-    fun rotationY(view: View, from: Float, to: Float, duration: Long, delay: Long): IAnim
+    fun builder(): AnimBuilder
 }

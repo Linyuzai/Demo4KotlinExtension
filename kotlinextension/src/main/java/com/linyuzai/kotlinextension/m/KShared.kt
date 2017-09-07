@@ -3,6 +3,7 @@ package com.linyuzai.kotlinextension.m
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
+import com.linyuzai.kotlinextension.Ex
 import com.linyuzai.kotlinextension.deserialize
 import com.linyuzai.kotlinextension.serialize
 
@@ -13,20 +14,11 @@ import com.linyuzai.kotlinextension.serialize
 internal object KShared : IShared {
     private val PREFIX: String = "_"
     private val SIZE: String = "_size"
-    private var prefs: SharedPreferences? = null
-
-    fun bind(context: Context) {
-        if (prefs == null) {
-            synchronized(KShared::class.java) {
-                if (prefs == null)
-                    prefs = context.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE)
-            }
-        }
-    }
+    private val prefs: SharedPreferences by lazy { Ex.context!!.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE) }
 
     @SuppressLint("CommitPrefEdits")
     override fun <T> put(key: String, value: T?): IShared =
-            with(prefs!!.edit()) {
+            with(prefs.edit()) {
                 when (value) {
                     is Long -> putLong(key, value)
                     is String -> putString(key, value)
@@ -50,7 +42,7 @@ internal object KShared : IShared {
 
     @Suppress("UNCHECKED_CAST")
     override fun <T> get(key: String, defValue: T?): T? =
-            with(prefs!!) {
+            with(prefs) {
                 when (defValue) {
                     is Long -> getLong(key, defValue) as T
                     is String -> getString(key, defValue) as T
@@ -70,7 +62,7 @@ internal object KShared : IShared {
     }
 
     override fun remove(key: String): IShared {
-        prefs!!.edit().remove(key).apply()
+        prefs.edit().remove(key).apply()
         return this
     }
 
@@ -83,7 +75,7 @@ internal object KShared : IShared {
     }
 
     override fun clear(): IShared {
-        prefs!!.edit().clear().apply()
+        prefs.edit().clear().apply()
         return this
     }
 }

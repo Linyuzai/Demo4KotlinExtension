@@ -16,7 +16,10 @@ internal object KMemory : IMemory {
 
     override fun <T> get(key: String): T? = map[key] as T
 
-    override fun <T> get(key: String, defValue: T?): T? = map.getOrDefault(key, defValue as Any) as T
+    override fun <T> get(key: String, defValue: T?): T? =
+            //map.getOrDefault(key, defValue as Any) as T
+            //getOrDefault since jdk1.8
+            get(key) ?: defValue
 }
 
 interface IMemory {
