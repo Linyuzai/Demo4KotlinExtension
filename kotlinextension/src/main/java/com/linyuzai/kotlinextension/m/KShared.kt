@@ -25,15 +25,19 @@ internal object KShared : IShared {
                     is Int -> putInt(key, value)
                     is Boolean -> putBoolean(key, value)
                     is Float -> putFloat(key, value)
-                    else -> putString(key, value?.serialize())
+                    else -> putString(key, if (value == null) "" else value.serialize())
                 }
                 apply()
                 this@KShared
             }
 
     override fun <T> putList(key: String, list: List<T>?): IShared {
-        put("$PREFIX$key$SIZE", list?.size)
-        for (i in list!!.indices)
+        if (list == null) {
+            put(key, "")
+            return this
+        }
+        put("$PREFIX$key$SIZE", list.size)
+        for (i in list.indices)
             put("$PREFIX$key$PREFIX$i", list[i])
         return this
     }
@@ -54,9 +58,9 @@ internal object KShared : IShared {
             }
 
     override fun <T> getList(key: String): List<T>? {
-        val count: Int? = get("$PREFIX$key$SIZE", 0)
-        val list: ArrayList<T> = ArrayList(count!!)
-        for (i in list.indices)
+        val count: Int = get("$PREFIX$key$SIZE", 0)!!
+        val list: MutableList<T> = arrayListOf()
+        for (i in 0..count)
             list[i] = get<T>("$PREFIX$key$PREFIX$i")!!
         return list
     }
@@ -67,8 +71,8 @@ internal object KShared : IShared {
     }
 
     override fun removeList(key: String): IShared {
-        val count: Int? = get("$PREFIX$key$SIZE", 0)
-        for (i in 0..count!!)
+        val count: Int = get("$PREFIX$key$SIZE", 0)!!
+        for (i in 0..count)
             remove("$PREFIX$key$PREFIX$i")
         remove("$PREFIX$key$SIZE")
         return this

@@ -45,87 +45,41 @@ class AnimBuilder internal constructor() {
     private var evaluator: TypeEvaluator<Any>? = null
 
 
-    fun with(view: View?): AnimBuilder {
-        this.view = view
-        return this
-    }
+    fun with(view: View?): AnimBuilder = apply { this.view = view }
 
-    fun from(from: Float): AnimBuilder {
-        this.from = from
-        return this
-    }
+    fun from(from: Float): AnimBuilder = apply { this.from = from }
 
-    fun to(to: Float): AnimBuilder {
-        this.to = to
-        return this
-    }
+    fun to(to: Float): AnimBuilder = apply { this.to = to }
 
-    fun duration(duration: Long): AnimBuilder {
-        this.duration = duration
-        return this
-    }
+    fun duration(duration: Long): AnimBuilder = apply { this.duration = duration }
 
-    fun delay(delay: Long): AnimBuilder {
-        this.delay = delay
-        return this
-    }
+    fun delay(delay: Long): AnimBuilder = apply { this.delay = delay }
 
-    fun onStart(onStart: ((anim: Animator?) -> Unit)?): AnimBuilder {
-        this.onStart = onStart
-        return this
-    }
+    fun onStart(onStart: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onStart = onStart }
 
-    fun onEnd(onEnd: ((anim: Animator?) -> Unit)?): AnimBuilder {
-        this.onEnd = onEnd
-        return this
-    }
+    fun onEnd(onEnd: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onEnd = onEnd }
 
-    fun onCancel(onCancel: ((anim: Animator?) -> Unit)?): AnimBuilder {
-        this.onCancel = onCancel
-        return this
-    }
+    fun onCancel(onCancel: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onCancel = onCancel }
 
-    fun onRepeat(onRepeat: ((anim: Animator?) -> Unit)?): AnimBuilder {
-        this.onRepeat = onRepeat
-        return this
-    }
+    fun onRepeat(onRepeat: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onRepeat = onRepeat }
 
-    fun onPause(onPause: ((anim: Animator?) -> Unit)?): AnimBuilder {
-        this.onPause = onPause
-        return this
-    }
+    fun onPause(onPause: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onPause = onPause }
 
-    fun onResume(onResume: ((anim: Animator?) -> Unit)?): AnimBuilder {
-        this.onResume = onResume
-        return this
-    }
+    fun onResume(onResume: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onResume = onResume }
 
-    fun interpolator(interpolator: ((input: Float) -> Float)?): AnimBuilder {
-        if (interpolator == null)
-            return this
-        this.interpolator = TimeInterpolator {
-            interpolator.invoke(it)
-        }
-        return this
-    }
+    fun interpolator(interpolator: ((input: Float) -> Float)?): AnimBuilder =
+            apply { if (interpolator != null) this.interpolator = TimeInterpolator { interpolator.invoke(it) } }
 
-    fun interpolator(interpolator: TimeInterpolator): AnimBuilder {
-        this.interpolator = interpolator
-        return this
-    }
+    fun interpolator(interpolator: TimeInterpolator): AnimBuilder = apply { this.interpolator = interpolator }
 
-    fun evaluator(evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)?): AnimBuilder {
-        if (evaluator == null)
-            return this
-        this.evaluator = TypeEvaluator { fraction, startValue, endValue -> evaluator.invoke(fraction, startValue, endValue) }
-        return this
+    fun evaluator(evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)?): AnimBuilder = apply {
+        if (evaluator != null)
+            this.evaluator = TypeEvaluator { fraction, startValue, endValue -> evaluator.invoke(fraction, startValue, endValue) }
     }
 
     @Suppress("UNCHECKED_CAST")
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun <T : Any> evaluator(evaluator: TypeEvaluator<T>) {
-        this.evaluator = evaluator as TypeEvaluator<Any>
-    }
+    fun <T : Any> evaluator(evaluator: TypeEvaluator<T>): AnimBuilder = apply { this.evaluator = evaluator as TypeEvaluator<Any> }
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
     fun alpha(): ObjectAnimator = getAnim("alpha")

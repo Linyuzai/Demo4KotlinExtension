@@ -8,34 +8,28 @@ import com.linyuzai.kotlinextension.handler
  *
  */
 internal object KView : IView {
-    override fun show(vararg views: View): IView {
+    override fun show(vararg views: View): IView = apply {
         views.filter { it.visibility != View.VISIBLE }.forEach { it.visibility = View.VISIBLE }
-        return this
     }
 
-    override fun show(view: View, delay: Long): IView {
+    override fun show(view: View, delay: Long): IView = apply {
         handler().run(Runnable { if (view.visibility != View.VISIBLE) view.visibility = View.VISIBLE }, delay)
-        return this
     }
 
-    override fun hide(vararg views: View): IView {
+    override fun hide(vararg views: View): IView = apply {
         views.filter { it.visibility != View.GONE }.forEach { it.visibility = View.GONE }
-        return this
     }
 
-    override fun hide(view: View, delay: Long): IView {
+    override fun hide(view: View, delay: Long): IView = apply {
         handler().run(Runnable { if (view.visibility != View.GONE) view.visibility = View.GONE }, delay)
-        return this
     }
 
-    override fun hold(vararg views: View): IView {
+    override fun hold(vararg views: View): IView = apply {
         views.filter { it.visibility != View.GONE }.forEach { it.visibility = View.GONE }
-        return this
     }
 
-    override fun hold(view: View, delay: Long): IView {
+    override fun hold(view: View, delay: Long): IView = apply {
         handler().run(Runnable { if (view.visibility != View.INVISIBLE) view.visibility = View.INVISIBLE }, delay)
-        return this
     }
 }
 

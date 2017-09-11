@@ -9,85 +9,37 @@ import android.util.Log
 internal object KLog : ILog {
     @Volatile private var isEnable: Boolean = true
 
-    override fun enable(): ILog {
-        isEnable = true
-        return this
-    }
+    override fun enable(): ILog = apply { isEnable = true }
 
-    override fun disable(): ILog {
-        isEnable = false
-        return this
-    }
+    override fun disable(): ILog = apply { isEnable = false }
 
-    override fun v(tag: String, msg: String): ILog {
-        log0(tag, msg, Log.VERBOSE)
-        return this
-    }
+    override fun v(tag: String, msg: String): ILog = apply { log0(tag, msg, Log.VERBOSE) }
 
-    override fun v(tag: String, msg: String, tr: Throwable): ILog {
-        log2(tag, msg, tr, Log.VERBOSE)
-        return this
-    }
+    override fun v(tag: String, msg: String, tr: Throwable): ILog = apply { log2(tag, msg, tr, Log.VERBOSE) }
 
-    override fun d(tag: String, msg: String): ILog {
-        log0(tag, msg, Log.DEBUG)
-        return this
-    }
+    override fun d(tag: String, msg: String): ILog = apply { log0(tag, msg, Log.DEBUG) }
 
-    override fun d(tag: String, msg: String, tr: Throwable): ILog {
-        log2(tag, msg, tr, Log.DEBUG)
-        return this
-    }
+    override fun d(tag: String, msg: String, tr: Throwable): ILog = apply { log2(tag, msg, tr, Log.DEBUG) }
 
-    override fun i(tag: String, msg: String): ILog {
-        log0(tag, msg, Log.INFO)
-        return this
-    }
+    override fun i(tag: String, msg: String): ILog = apply { log0(tag, msg, Log.INFO) }
 
-    override fun i(tag: String, msg: String, tr: Throwable): ILog {
-        log2(tag, msg, tr, Log.INFO)
-        return this
-    }
+    override fun i(tag: String, msg: String, tr: Throwable): ILog = apply { log2(tag, msg, tr, Log.INFO) }
 
-    override fun w(tag: String, msg: String): ILog {
-        log0(tag, msg, Log.WARN)
-        return this
-    }
+    override fun w(tag: String, msg: String): ILog = apply { log0(tag, msg, Log.WARN) }
 
-    override fun w(tag: String, tr: Throwable): ILog {
-        log1(tag, tr, Log.WARN)
-        return this
-    }
+    override fun w(tag: String, tr: Throwable): ILog = apply { log1(tag, tr, Log.WARN) }
 
-    override fun w(tag: String, msg: String, tr: Throwable): ILog {
-        log2(tag, msg, tr, Log.WARN)
-        return this
-    }
+    override fun w(tag: String, msg: String, tr: Throwable): ILog = apply { log2(tag, msg, tr, Log.WARN) }
 
-    override fun e(tag: String, msg: String): ILog {
-        log0(tag, msg, Log.ERROR)
-        return this
-    }
+    override fun e(tag: String, msg: String): ILog = apply { log0(tag, msg, Log.ERROR) }
 
-    override fun e(tag: String, msg: String, tr: Throwable): ILog {
-        log2(tag, msg, tr, Log.ERROR)
-        return this
-    }
+    override fun e(tag: String, msg: String, tr: Throwable): ILog = apply { log2(tag, msg, tr, Log.ERROR) }
 
-    override fun a(tag: String, msg: String): ILog {
-        log0(tag, msg, Log.ASSERT)
-        return this
-    }
+    override fun a(tag: String, msg: String): ILog = apply { log0(tag, msg, Log.ASSERT) }
 
-    override fun a(tag: String, tr: Throwable): ILog {
-        log1(tag, tr, Log.ASSERT)
-        return this
-    }
+    override fun a(tag: String, tr: Throwable): ILog = apply { log1(tag, tr, Log.ASSERT) }
 
-    override fun a(tag: String, msg: String, tr: Throwable): ILog {
-        log2(tag, msg, tr, Log.ASSERT)
-        return this
-    }
+    override fun a(tag: String, msg: String, tr: Throwable): ILog = apply { log2(tag, msg, tr, Log.ASSERT) }
 
     private fun log0(tag: String, msg: String, level: Int) {
         if (isEnable)

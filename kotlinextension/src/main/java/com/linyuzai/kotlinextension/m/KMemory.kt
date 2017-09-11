@@ -9,10 +9,7 @@ import java.util.concurrent.ConcurrentHashMap
 @Suppress("UNCHECKED_CAST")
 internal object KMemory : IMemory {
     private val map: ConcurrentHashMap<String, Any> = ConcurrentHashMap()
-    override fun <T> put(key: String, value: T?): IMemory {
-        map[key] = value as Any
-        return this
-    }
+    override fun <T> put(key: String, value: T?): IMemory = apply { map[key] = value as Any }
 
     override fun <T> get(key: String): T? = map[key] as T
 

@@ -13,25 +13,22 @@ internal object KHandler : IHandler {
     private val handler: Handler = Handler(Looper.getMainLooper())
     private val runnableList: Vector<Runnable> = Vector()
 
-    override fun run(runnable: Runnable): IHandler {
+    override fun run(runnable: Runnable): IHandler = apply {
         runnableList.add(runnable)
         handler.post(runnable)
-        return this
     }
 
-    override fun run(runnable: Runnable, delay: Long): IHandler {
+    override fun run(runnable: Runnable, delay: Long): IHandler = apply {
         runnableList.add(runnable)
         handler.postDelayed(runnable, delay)
-        return this
     }
 
-    override fun intercept(runnable: Runnable): IHandler {
+    override fun intercept(runnable: Runnable): IHandler = apply {
         runnableList.remove(runnable)
         handler.removeCallbacks(runnable)
-        return this
     }
 
-    override fun clear() {
+    override fun clear(): IHandler = apply {
         runnableList.forEach {
             handler.removeCallbacks(it)
         }
@@ -46,5 +43,5 @@ interface IHandler {
 
     fun intercept(runnable: Runnable): IHandler
 
-    fun clear()
+    fun clear(): IHandler
 }
