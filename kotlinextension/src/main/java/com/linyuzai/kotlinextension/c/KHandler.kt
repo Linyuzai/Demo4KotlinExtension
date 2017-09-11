@@ -3,7 +3,6 @@ package com.linyuzai.kotlinextension.c
 import android.os.Handler
 import android.os.Looper
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Created by Administrator on 2017/5/12 0012.

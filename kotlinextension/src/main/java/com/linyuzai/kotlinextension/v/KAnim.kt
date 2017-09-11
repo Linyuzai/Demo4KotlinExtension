@@ -4,7 +4,6 @@ import android.animation.*
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.view.View
-import com.linyuzai.kotlinextension.*
 
 /**
  * Created by Administrator on 2017/5/12 0012.
