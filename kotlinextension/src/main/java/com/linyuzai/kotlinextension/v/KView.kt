@@ -4,8 +4,8 @@ import android.view.View
 import com.linyuzai.kotlinextension.handler
 
 /**
- * Created by Administrator on 2017/5/12 0012.
- *
+ * Created by linyuzai on 2017/5/12 0012.
+ * @author linyuzai
  */
 internal object KView : IView {
     override fun show(vararg views: View): IView = apply {

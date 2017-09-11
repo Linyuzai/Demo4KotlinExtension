@@ -3,7 +3,7 @@ package com.linyuzai.kotlinextension.u
 import android.util.Log
 
 /**
- * Created by Administrator on 2017/5/16 0016.
+ * Created by linyuzai on 2017/5/16 0016.
  * @author linyuzai
  */
 internal object KLog : ILog {

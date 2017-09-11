@@ -5,7 +5,7 @@ import android.os.Looper
 import java.util.*
 
 /**
- * Created by Administrator on 2017/5/12 0012.
+ * Created by linyuzai on 2017/5/12 0012.
  * @author linyuzai
  */
 internal object KHandler : IHandler {

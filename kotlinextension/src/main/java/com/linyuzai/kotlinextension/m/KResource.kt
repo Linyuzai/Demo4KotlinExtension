@@ -10,6 +10,7 @@ import com.linyuzai.kotlinextension.Ex
 
 /**
  * Created by linyuzai on 2017/8/29.
+ * @author linyuzai
  */
 internal object KResource : IResource {
 

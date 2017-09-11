@@ -8,7 +8,7 @@ import com.linyuzai.kotlinextension.deserialize
 import com.linyuzai.kotlinextension.serialize
 
 /**
- * Created by Administrator on 2017/5/2 0002.
+ * Created by linyuzai on 2017/5/2 0002.
  * @author linyuzai
  */
 internal object KShared : IShared {

@@ -6,8 +6,8 @@ import android.support.annotation.RequiresApi
 import android.view.View
 
 /**
- * Created by Administrator on 2017/5/12 0012.
- *
+ * Created by linyuzai on 2017/5/12 0012.
+ * @author linyuzai
  */
 @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
 internal object KAnim : IAnim {

@@ -3,7 +3,7 @@ package com.linyuzai.kotlinextension.m
 import java.util.concurrent.ConcurrentHashMap
 
 /**
- * Created by Administrator on 2017/5/2 0002.
+ * Created by liyuzai on 2017/5/2 0002.
  * @author linyuzai
  */
 @Suppress("UNCHECKED_CAST")
@@ -13,10 +13,9 @@ internal object KMemory : IMemory {
 
     override fun <T> get(key: String): T? = map[key] as T
 
-    override fun <T> get(key: String, defValue: T?): T? =
-            //map.getOrDefault(key, defValue as Any) as T
-            //getOrDefault since jdk1.8
-            get(key) ?: defValue
+    //getOrDefault since jdk1.8
+    //map.getOrDefault(key, defValue as Any) as T
+    override fun <T> get(key: String, defValue: T?): T? = get(key) ?: defValue
 }
 
 interface IMemory {
