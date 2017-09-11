@@ -1,9 +1,6 @@
 package com.linyuzai.kotlinextension.v
 
-import android.animation.Animator
-import android.animation.ArgbEvaluator
-import android.animation.ObjectAnimator
-import android.animation.TimeInterpolator
+import android.animation.*
 import android.os.Build
 import android.support.annotation.RequiresApi
 import android.view.View
@@ -43,12 +40,12 @@ class AnimBuilder internal constructor() {
 
     private var onResume: ((anim: Animator?) -> Unit)? = null
 
-    private var interpolator: ((input: Float) -> Float)? = null
+    private var interpolator: TimeInterpolator? = null
 
-    private var evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)? = null
+    private var evaluator: TypeEvaluator<Any>? = null
 
 
-    fun with(view: View): AnimBuilder {
+    fun with(view: View?): AnimBuilder {
         this.view = view
         return this
     }
@@ -104,13 +101,30 @@ class AnimBuilder internal constructor() {
     }
 
     fun interpolator(interpolator: ((input: Float) -> Float)?): AnimBuilder {
+        if (interpolator == null)
+            return this
+        this.interpolator = TimeInterpolator {
+            interpolator.invoke(it)
+        }
+        return this
+    }
+
+    fun interpolator(interpolator: TimeInterpolator): AnimBuilder {
         this.interpolator = interpolator
         return this
     }
 
-    fun <T> evaluator(evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)?): AnimBuilder {
-        this.evaluator = evaluator
+    fun evaluator(evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)?): AnimBuilder {
+        if (evaluator == null)
+            return this
+        this.evaluator = TypeEvaluator { fraction, startValue, endValue -> evaluator.invoke(fraction, startValue, endValue) }
         return this
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    fun <T : Any> evaluator(evaluator: TypeEvaluator<T>) {
+        this.evaluator = evaluator as TypeEvaluator<Any>
     }
 
     @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
@@ -142,9 +156,9 @@ class AnimBuilder internal constructor() {
         val animator: ObjectAnimator = ObjectAnimator.ofFloat(view, anim, from, to).setDuration(duration)
         animator.startDelay = delay
         if (interpolator != null)
-            animator.interpolator = TimeInterpolator { input -> interpolator!!.invoke(input) }
+            animator.interpolator = interpolator
         if (evaluator != null)
-            animator.setEvaluator { fraction, startValue, endValue -> evaluator!!.invoke(fraction, startValue, endValue) }
+            animator.setEvaluator(evaluator)
         val listener1: Animator.AnimatorListener = object : Animator.AnimatorListener {
             override fun onAnimationRepeat(animation: Animator?) {
                 onRepeat?.invoke(animation)

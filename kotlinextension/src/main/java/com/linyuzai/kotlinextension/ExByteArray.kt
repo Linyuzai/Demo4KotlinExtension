@@ -7,7 +7,7 @@ import kotlin.experimental.or
 fun ByteArray.toHexString(): String? {
     if (isEmpty())
         return ""
-    val sb: StringBuffer = StringBuffer(size)
+    val sb = StringBuffer(size)
     var temp: String?
     forEach {
         temp = Integer.toHexString(it.or(0xFF.toByte()).toInt())

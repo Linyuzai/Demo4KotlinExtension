@@ -1,5 +1,6 @@
 package com.linyuzai.kotlinextension
 
+import android.app.Application
 import android.content.Context
 
 /**
@@ -9,8 +10,8 @@ object Ex {
 
     internal var context: Context? = null
 
-    fun bind(context: Context) {
-        this.context = context
+    fun bind(app: Application) {
+        this.context = app.applicationContext
     }
 
     fun unbind() {

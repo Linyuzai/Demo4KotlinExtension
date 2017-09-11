@@ -2,6 +2,7 @@ package com.linyuzai.kotlinextension.c
 
 import android.os.Handler
 import android.os.Looper
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -10,31 +11,31 @@ import java.util.concurrent.ConcurrentHashMap
  */
 internal object KHandler : IHandler {
     private val handler: Handler = Handler(Looper.getMainLooper())
-    private val runnableMap: ConcurrentHashMap<String, Runnable> = ConcurrentHashMap()
+    private val runnableList: Vector<Runnable> = Vector()
 
     override fun run(runnable: Runnable): IHandler {
+        runnableList.add(runnable)
         handler.post(runnable)
         return this
     }
 
     override fun run(runnable: Runnable, delay: Long): IHandler {
+        runnableList.add(runnable)
         handler.postDelayed(runnable, delay)
         return this
     }
 
-    override fun run(name: String, runnable: Runnable): IHandler {
-        handler.post(runnableMap.put(name, runnable))
+    override fun intercept(runnable: Runnable): IHandler {
+        runnableList.remove(runnable)
+        handler.removeCallbacks(runnable)
         return this
     }
 
-    override fun run(name: String, runnable: Runnable, delay: Long): IHandler {
-        handler.postDelayed(runnableMap.put(name, runnable), delay)
-        return this
-    }
-
-    override fun intercept(name: String): IHandler {
-        handler.removeCallbacks(runnableMap.remove(name))
-        return this
+    override fun clear() {
+        runnableList.forEach {
+            handler.removeCallbacks(it)
+        }
+        runnableList.clear()
     }
 }
 
@@ -43,9 +44,7 @@ interface IHandler {
 
     fun run(runnable: Runnable, delay: Long): IHandler
 
-    fun run(name: String, runnable: Runnable): IHandler
+    fun intercept(runnable: Runnable): IHandler
 
-    fun run(name: String, runnable: Runnable, delay: Long): IHandler
-
-    fun intercept(name: String): IHandler
+    fun clear()
 }

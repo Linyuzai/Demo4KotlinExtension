@@ -33,5 +33,7 @@ class MainActivity : Activity() {
         log().enable()
 
         anim().builder().with(button).onStart { }.onEnd { }.alpha().start()
+
+        service().vibrator().vibrate(1000)
     }
 }

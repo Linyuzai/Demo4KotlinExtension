@@ -16,7 +16,7 @@ fun Activity.setStatusBarColor(@ColorInt color: Int, alpha: Int = KStatusBar.DEF
 
 @JvmOverloads
 fun Activity.setStatusBarColorRes(@ColorRes color: Int, alpha: Int = KStatusBar.DEFAULT_STATUS_BAR_ALPHA)
-        = KStatusBar.setColor(this, resources.getColor(color), alpha)
+        = KStatusBar.setColor(this, res().getColor(color), alpha)
 
 @JvmOverloads
 fun Activity.setStatusBarTranslucent(alpha: Int = 0) = KStatusBar.setTranslucent(this, alpha)
