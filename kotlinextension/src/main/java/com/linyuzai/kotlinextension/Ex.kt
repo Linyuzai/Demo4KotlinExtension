@@ -23,6 +23,7 @@ object Ex {
             .configFile()
             .configMemory()
             .configResource()
+            .configShared()
             .configAnim()
             .configView()
 
@@ -30,15 +31,17 @@ object Ex {
 
     fun unbind(): Ex = apply { this.context = null }
 
-    fun configHandler(): Ex = apply { pool().builder().tag(KHandler.POOL_KEY).from { HandlerOperator() }.build() }
+    fun configHandler(): Ex = apply { pool().builder().tag(KHandler.POOL_KEY).from { HandlerOperator() }.build().recycle() }
 
-    fun configFile(): Ex = apply { pool().builder().tag(KFile.POOL_KEY).from { FileOperator() }.build() }
+    fun configFile(): Ex = apply { pool().builder().tag(KFile.POOL_KEY).from { FileOperator() }.build().recycle() }
 
-    fun configMemory(): Ex = apply { pool().builder().tag(KMemory.POOL_KEY).from { MemoryOperator() }.build() }
+    fun configMemory(): Ex = apply { pool().builder().tag(KMemory.POOL_KEY).from { MemoryOperator() }.build().recycle() }
 
-    fun configResource(): Ex = apply { pool().builder().tag(KResource.POOL_KEY).from { ResourceOperator() }.build() }
+    fun configResource(): Ex = apply { pool().builder().tag(KResource.POOL_KEY).from { ResourceOperator() }.build().recycle() }
 
-    fun configAnim(): Ex = apply { pool().builder().tag(KAnim.POOL_KEY).from { AnimBuilder() }.build() }
+    fun configShared(): Ex = apply { pool().builder().tag(KShared.POOL_KEY).from { SharedOperator() }.build().recycle() }
 
-    fun configView(): Ex = apply { pool().builder().tag(KView.POOL_KEY).from { ViewOperator() }.build() }
+    fun configAnim(): Ex = apply { pool().builder().tag(KAnim.POOL_KEY).from { AnimBuilder() }.build().recycle() }
+
+    fun configView(): Ex = apply { pool().builder().tag(KView.POOL_KEY).from { ViewOperator() }.build().recycle() }
 }

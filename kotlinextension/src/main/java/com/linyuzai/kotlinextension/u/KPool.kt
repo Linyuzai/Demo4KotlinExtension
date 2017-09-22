@@ -15,7 +15,7 @@ internal object KPool : IPool {
     internal val creatorMap: MutableMap<String, (() -> Any)> = hashMapOf()
 
     init {
-        PoolBuilder().tag(POOL_KEY).from { PoolBuilder() }.build()
+        PoolBuilder().tag(POOL_KEY).from { PoolBuilder() }.build().recycle()
     }
 
     override fun builder(): PoolBuilder = get(POOL_KEY)

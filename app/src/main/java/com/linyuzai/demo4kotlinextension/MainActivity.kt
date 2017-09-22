@@ -45,6 +45,6 @@ class MainActivity : Activity() {
 
         service().vibrator().vibrate(1000)
 
-        file().operator().dir("").file("").create {}
+        file().operator().dir("").file("").create {}.rename()
     }
 }
