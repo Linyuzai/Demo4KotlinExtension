@@ -1,11 +1,10 @@
 package com.linyuzai.kotlinextension.v
 
+import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
 import android.graphics.Color
 import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.v4.widget.DrawerLayout
 import android.util.AttributeSet
 import android.view.View
 import android.view.ViewGroup
@@ -142,9 +141,9 @@ internal object KStatusBar {
      * *
      * @param color        状态栏颜色值
      */
-    fun setColorNoTranslucentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, color: Int) {
-        setColorForDrawerLayout(activity, drawerLayout, color, 0)
-    }
+    //    fun setColorNoTranslucentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, color: Int) {
+//        setColorForDrawerLayout(activity, drawerLayout, color, 0)
+//    }
 
     /**
      * 为DrawerLayout 布局设置状态栏变色
@@ -157,40 +156,40 @@ internal object KStatusBar {
      * *
      * @param statusBarAlpha 状态栏透明度
      */
-    @JvmOverloads
-    fun setColorForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, color: Int, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            activity.window.statusBarColor = Color.TRANSPARENT
-        } else {
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
-        // 生成一个状态栏大小的矩形
-        // 添加 statusBarView 到布局中
-        val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
-        if (contentLayout.childCount > 0 && contentLayout.getChildAt(0) is StatusBarView) {
-            contentLayout.getChildAt(0).setBackgroundColor(calculateStatusColor(color, statusBarAlpha))
-        } else {
-            val statusBarView = createStatusBarView(activity, color)
-            contentLayout.addView(statusBarView, 0)
-        }
-        // 内容布局不是 LinearLayout 时,设置padding top
-        if (contentLayout !is LinearLayout && contentLayout.getChildAt(1) != null) {
-            contentLayout.getChildAt(1).setPadding(0, getStatusBarHeight(activity), 0, 0)
-        }
-        // 设置属性
-        val drawer = drawerLayout.getChildAt(1) as ViewGroup
-        drawerLayout.fitsSystemWindows = false
-        contentLayout.fitsSystemWindows = false
-        contentLayout.clipToPadding = true
-        drawer.fitsSystemWindows = false
-
-        addTranslucentView(activity, statusBarAlpha)
-    }
+    //    @JvmOverloads
+//    fun setColorForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, color: Int, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+//            return
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//            activity.window.statusBarColor = Color.TRANSPARENT
+//        } else {
+//            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//        }
+//        // 生成一个状态栏大小的矩形
+//        // 添加 statusBarView 到布局中
+//        val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
+//        if (contentLayout.childCount > 0 && contentLayout.getChildAt(0) is StatusBarView) {
+//            contentLayout.getChildAt(0).setBackgroundColor(calculateStatusColor(color, statusBarAlpha))
+//        } else {
+//            val statusBarView = createStatusBarView(activity, color)
+//            contentLayout.addView(statusBarView, 0)
+//        }
+//        // 内容布局不是 LinearLayout 时,设置padding top
+//        if (contentLayout !is LinearLayout && contentLayout.getChildAt(1) != null) {
+//            contentLayout.getChildAt(1).setPadding(0, getStatusBarHeight(activity), 0, 0)
+//        }
+//        // 设置属性
+//        val drawer = drawerLayout.getChildAt(1) as ViewGroup
+//        drawerLayout.fitsSystemWindows = false
+//        contentLayout.fitsSystemWindows = false
+//        contentLayout.clipToPadding = true
+//        drawer.fitsSystemWindows = false
+//
+//        addTranslucentView(activity, statusBarAlpha)
+//    }
 
     /**
      * 为DrawerLayout 布局设置状态栏变色(5.0以下无半透明效果,不建议使用)
@@ -201,30 +200,30 @@ internal object KStatusBar {
      * *
      * @param color        状态栏颜色值
      */
-    fun setColorForDrawerLayoutDiff(activity: Activity, drawerLayout: DrawerLayout, color: Int) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            // 生成一个状态栏大小的矩形
-            val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
-            if (contentLayout.childCount > 0 && contentLayout.getChildAt(0) is StatusBarView) {
-                contentLayout.getChildAt(0).setBackgroundColor(calculateStatusColor(color, DEFAULT_STATUS_BAR_ALPHA))
-            } else {
-                // 添加 statusBarView 到布局中
-                val statusBarView = createStatusBarView(activity, color)
-                contentLayout.addView(statusBarView, 0)
-            }
-            // 内容布局不是 LinearLayout 时,设置padding top
-            if (contentLayout !is LinearLayout && contentLayout.getChildAt(1) != null) {
-                contentLayout.getChildAt(1).setPadding(0, getStatusBarHeight(activity), 0, 0)
-            }
-            // 设置属性
-            val drawer = drawerLayout.getChildAt(1) as ViewGroup
-            drawerLayout.fitsSystemWindows = false
-            contentLayout.fitsSystemWindows = false
-            contentLayout.clipToPadding = true
-            drawer.fitsSystemWindows = false
-        }
-    }
+    //    fun setColorForDrawerLayoutDiff(activity: Activity, drawerLayout: DrawerLayout, color: Int) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//            // 生成一个状态栏大小的矩形
+//            val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
+//            if (contentLayout.childCount > 0 && contentLayout.getChildAt(0) is StatusBarView) {
+//                contentLayout.getChildAt(0).setBackgroundColor(calculateStatusColor(color, DEFAULT_STATUS_BAR_ALPHA))
+//            } else {
+//                // 添加 statusBarView 到布局中
+//                val statusBarView = createStatusBarView(activity, color)
+//                contentLayout.addView(statusBarView, 0)
+//            }
+//            // 内容布局不是 LinearLayout 时,设置padding top
+//            if (contentLayout !is LinearLayout && contentLayout.getChildAt(1) != null) {
+//                contentLayout.getChildAt(1).setPadding(0, getStatusBarHeight(activity), 0, 0)
+//            }
+//            // 设置属性
+//            val drawer = drawerLayout.getChildAt(1) as ViewGroup
+//            drawerLayout.fitsSystemWindows = false
+//            contentLayout.fitsSystemWindows = false
+//            contentLayout.clipToPadding = true
+//            drawer.fitsSystemWindows = false
+//        }
+//    }
 
     /**
      * 为 DrawerLayout 布局设置状态栏透明
@@ -233,14 +232,14 @@ internal object KStatusBar {
      * *
      * @param drawerLayout DrawerLayout
      */
-    @JvmOverloads
-    fun setTranslucentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return
-        }
-        setTransparentForDrawerLayout(activity, drawerLayout)
-        addTranslucentView(activity, statusBarAlpha)
-    }
+    //    @JvmOverloads
+//    fun setTranslucentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout, statusBarAlpha: Int = DEFAULT_STATUS_BAR_ALPHA) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+//            return
+//        }
+//        setTransparentForDrawerLayout(activity, drawerLayout)
+//        addTranslucentView(activity, statusBarAlpha)
+//    }
 
     /**
      * 为 DrawerLayout 布局设置状态栏透明
@@ -249,31 +248,31 @@ internal object KStatusBar {
      * *
      * @param drawerLayout DrawerLayout
      */
-    fun setTransparentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout) {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-            return
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            activity.window.statusBarColor = Color.TRANSPARENT
-        } else {
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
-
-        val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
-        // 内容布局不是 LinearLayout 时,设置padding top
-        if (contentLayout !is LinearLayout && contentLayout.getChildAt(1) != null) {
-            contentLayout.getChildAt(1).setPadding(0, getStatusBarHeight(activity), 0, 0)
-        }
-
-        // 设置属性
-        val drawer = drawerLayout.getChildAt(1) as ViewGroup
-        drawerLayout.fitsSystemWindows = false
-        contentLayout.fitsSystemWindows = false
-        contentLayout.clipToPadding = true
-        drawer.fitsSystemWindows = false
-    }
+    //    fun setTransparentForDrawerLayout(activity: Activity, drawerLayout: DrawerLayout) {
+//        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+//            return
+//        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//            activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+//            activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//            activity.window.statusBarColor = Color.TRANSPARENT
+//        } else {
+//            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//        }
+//
+//        val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
+//        // 内容布局不是 LinearLayout 时,设置padding top
+//        if (contentLayout !is LinearLayout && contentLayout.getChildAt(1) != null) {
+//            contentLayout.getChildAt(1).setPadding(0, getStatusBarHeight(activity), 0, 0)
+//        }
+//
+//        // 设置属性
+//        val drawer = drawerLayout.getChildAt(1) as ViewGroup
+//        drawerLayout.fitsSystemWindows = false
+//        contentLayout.fitsSystemWindows = false
+//        contentLayout.clipToPadding = true
+//        drawer.fitsSystemWindows = false
+//    }
 
     /**
      * 为 DrawerLayout 布局设置状态栏透明(5.0以上半透明效果,不建议使用)
@@ -282,21 +281,21 @@ internal object KStatusBar {
      * *
      * @param drawerLayout DrawerLayout
      */
-    fun setTranslucentForDrawerLayoutDiff(activity: Activity, drawerLayout: DrawerLayout) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            // 设置状态栏透明
-            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            // 设置内容布局属性
-            val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
-            contentLayout.fitsSystemWindows = true
-            contentLayout.clipToPadding = true
-            // 设置抽屉布局属性
-            val vg = drawerLayout.getChildAt(1) as ViewGroup
-            vg.fitsSystemWindows = false
-            // 设置 DrawerLayout 属性
-            drawerLayout.fitsSystemWindows = false
-        }
-    }
+    //    fun setTranslucentForDrawerLayoutDiff(activity: Activity, drawerLayout: DrawerLayout) {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            // 设置状态栏透明
+//            activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+//            // 设置内容布局属性
+//            val contentLayout = drawerLayout.getChildAt(0) as ViewGroup
+//            contentLayout.fitsSystemWindows = true
+//            contentLayout.clipToPadding = true
+//            // 设置抽屉布局属性
+//            val vg = drawerLayout.getChildAt(1) as ViewGroup
+//            vg.fitsSystemWindows = false
+//            // 设置 DrawerLayout 属性
+//            drawerLayout.fitsSystemWindows = false
+//        }
+//    }
 
     /**
      * 添加半透明矩形条
@@ -356,7 +355,7 @@ internal object KStatusBar {
     /**
      * 设置根布局参数
      */
-    @RequiresApi(api = Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     private fun setRootView(activity: Activity) {
         val rootView = (activity.findViewById(android.R.id.content) as ViewGroup).getChildAt(0) as ViewGroup
         rootView.fitsSystemWindows = true
@@ -366,14 +365,13 @@ internal object KStatusBar {
     /**
      * 使状态栏透明
      */
-    @RequiresApi(Build.VERSION_CODES.KITKAT)
     private fun transparentStatusBar(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
             activity.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
             activity.window.statusBarColor = Color.TRANSPARENT
-        } else {
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             activity.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
     }

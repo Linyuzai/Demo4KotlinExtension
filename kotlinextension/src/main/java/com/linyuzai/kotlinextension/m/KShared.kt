@@ -4,49 +4,104 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import com.linyuzai.kotlinextension.Ex
+import com.linyuzai.kotlinextension.a.RequestContext
 import com.linyuzai.kotlinextension.deserialize
+import com.linyuzai.kotlinextension.pool
 import com.linyuzai.kotlinextension.serialize
+import com.linyuzai.kotlinextension.u.PoolRecycler
 
 /**
  * Created by linyuzai on 2017/5/2 0002.
  * @author linyuzai
  */
 internal object KShared : IShared {
-    private val PREFIX: String = "_"
-    private val SIZE: String = "_size"
-    private val prefs: SharedPreferences by lazy { Ex.context!!.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE) }
 
-    @SuppressLint("CommitPrefEdits")
-    override fun <T> put(key: String, value: T?): IShared =
-            with(prefs.edit()) {
-                when (value) {
-                    is Long -> putLong(key, value)
-                    is String -> putString(key, value)
-                    is Int -> putInt(key, value)
-                    is Boolean -> putBoolean(key, value)
-                    is Float -> putFloat(key, value)
-                    else -> putString(key, if (value == null) "" else value.serialize())
-                }
-                apply()
-                this@KShared
-            }
+    internal val POOL_KEY: String = this::class.java.name
+    internal val PREFIX: String = "_"
+    internal val SIZE: String = "_size"
+    internal val prefs: SharedPreferences by lazy { Ex.context!!.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE) }
 
-    override fun <T> putList(key: String, list: List<T>?): IShared {
-        if (list == null) {
-            put(key, "")
-            return this
-        }
-        put("$PREFIX$key$SIZE", list.size)
-        for (i in list.indices)
-            put("$PREFIX$key$PREFIX$i", list[i])
-        return this
-    }
+    override fun operator(): SharedOperator = pool().get(POOL_KEY)
 
-    override fun <T> get(key: String): T? = get(key, null)
+}
+
+class SharedOperator internal constructor() : PoolRecycler<SharedOperator> {
+    private var key: String? = null
+    private var value: Any? = null
+    private var default: Any? = null
+    private var isListValue: Boolean = false
+    private var isApply: Boolean = true
+
+    fun key(key: String): SharedOperator = apply { this.key = key }
+
+    fun value(value: Any?): SharedOperator = apply { this.value = value }
+
+    fun default(default: Any?): SharedOperator = apply { this.default = default }
+
+    fun listValue(): SharedOperator = apply { this.isListValue = true }
+
+    fun sampleValue(): SharedOperator = apply { this.isListValue = false }
+
+    fun useApply(): SharedOperator = apply { this.isApply = true }
+
+    fun useCommit(): SharedOperator = apply { this.isApply = false }
+
+    fun put(): SharedOperator = apply { put(key!!, value) }
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> get(key: String, defValue: T?): T? =
-            with(prefs) {
+    fun <T> get(onGet: (value: T?) -> Unit): SharedOperator = apply {
+        onGet.invoke(if (isListValue) getCollection<Any>(key!!) as T else get(key!!, default) as T)
+    }
+
+    fun remove(): SharedOperator = apply { if (isListValue) removeCollection(key!!) else remove(key!!) }
+
+    @SuppressLint("CommitPrefEdits")
+    private fun <T> put(key: String, value: T?) {
+        with(KShared.prefs.edit()) {
+            when (value) {
+                is Long -> putLong(key, value)
+                is String -> putString(key, value)
+                is Int -> putInt(key, value)
+                is Boolean -> putBoolean(key, value)
+                is Float -> putFloat(key, value)
+                is Array<*> -> putArray(key, value)
+                is Collection<*> -> putCollection(key, value)
+                else -> putString(key, if (value == null) "" else value.serialize())
+            }
+            if (isApply)
+                apply()
+            else
+                commit()
+        }
+    }
+
+    private fun <T> putCollection(key: String, collection: Collection<T>?) {
+        if (collection == null) {
+            put(key, "")
+            return
+        }
+        put("${KShared.PREFIX}$key${KShared.SIZE}", collection.size)
+        var index = 0
+        collection.forEach {
+            put("${KShared.PREFIX}$key${KShared.PREFIX}${index++}", it)
+        }
+    }
+
+    private fun <T> putArray(key: String, array: Array<T>?) {
+        if (array == null) {
+            put(key, "")
+            return
+        }
+        put("${KShared.PREFIX}$key${KShared.SIZE}", array.size)
+        var index = 0
+        for (i in array.indices) {
+            put("${KShared.PREFIX}$key${KShared.PREFIX}$i", array[i])
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> get(key: String, defValue: T?): T? =
+            with(KShared.prefs) {
                 when (defValue) {
                     is Long -> getLong(key, defValue) as T
                     is String -> getString(key, defValue) as T
@@ -57,47 +112,47 @@ internal object KShared : IShared {
                 }
             }
 
-    override fun <T> getList(key: String): List<T>? {
-        val count: Int = get("$PREFIX$key$SIZE", 0)!!
+    @Suppress("UNCHECKED_CAST")
+    private fun <T> getCollection(key: String): MutableList<T>? {
+        val count: Int = get("${KShared.PREFIX}$key${KShared.SIZE}", 0)!!
         val list: MutableList<T> = arrayListOf()
         for (i in 0..count)
-            list[i] = get<T>("$PREFIX$key$PREFIX$i")!!
+            list[i] = get("${KShared.PREFIX}$key${KShared.PREFIX}$i", default as T)!!
         return list
     }
 
-    override fun remove(key: String): IShared {
-        prefs.edit().remove(key).apply()
-        return this
+    private fun remove(key: String) {
+        KShared.prefs.edit().remove(key).apply()
     }
 
-    override fun removeList(key: String): IShared {
-        val count: Int = get("$PREFIX$key$SIZE", 0)!!
+    private fun removeCollection(key: String) {
+        val count: Int = get("${KShared.PREFIX}$key${KShared.SIZE}", 0)!!
         for (i in 0..count)
-            remove("$PREFIX$key$PREFIX$i")
-        remove("$PREFIX$key$SIZE")
-        return this
+            remove("${KShared.PREFIX}$key${KShared.PREFIX}$i")
+        remove("${KShared.PREFIX}$key${KShared.SIZE}")
     }
 
-    override fun clear(): IShared {
-        prefs.edit().clear().apply()
-        return this
+    @SuppressLint("CommitPrefEdits")
+    fun clear(): SharedOperator = apply {
+        if (isApply)
+            KShared.prefs.edit().clear().apply()
+        else
+            KShared.prefs.edit().clear().commit()
+    }
+
+    override fun recycle(): SharedOperator = apply { pool().recycle(KShared.POOL_KEY, reset()) }
+
+    override fun reset(): SharedOperator = apply {
+        key = null
+        value = null
+        default = null
+        isListValue = false
+        isApply = true
     }
 }
 
+@RequestContext
 interface IShared {
-    fun <T> put(key: String, value: T?): IShared
 
-    fun <T> putList(key: String, list: List<T>?): IShared
-
-    fun <T> get(key: String): T?
-
-    fun <T> get(key: String, defValue: T?): T?
-
-    fun <T> getList(key: String): List<T>?
-
-    fun remove(key: String): IShared
-
-    fun removeList(key: String): IShared
-
-    fun clear(): IShared
+    fun operator(): SharedOperator
 }

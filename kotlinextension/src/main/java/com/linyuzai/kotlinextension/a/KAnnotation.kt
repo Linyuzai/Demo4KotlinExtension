@@ -1,4 +1,4 @@
-package com.linyuzai.kotlinextension.u
+package com.linyuzai.kotlinextension.a
 
 /**
  * Only for Android
@@ -7,3 +7,7 @@ package com.linyuzai.kotlinextension.u
 @Target(AnnotationTarget.FUNCTION)
 @Retention(AnnotationRetention.SOURCE)
 annotation class OnlyForAndroid
+
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.SOURCE)
+annotation class RequestContext

@@ -2,20 +2,21 @@ package com.linyuzai.kotlinextension.v
 
 import android.animation.*
 import android.os.Build
-import android.support.annotation.RequiresApi
 import android.view.View
+import com.linyuzai.kotlinextension.pool
+import com.linyuzai.kotlinextension.u.PoolRecycler
 
 /**
  * Created by linyuzai on 2017/5/12 0012.
  * @author linyuzai
  */
-@RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-internal object KAnim : IAnim {
 
-    override fun builder(): AnimBuilder = AnimBuilder()
+internal object KAnim : IAnim {
+    internal val POOL_KEY: String = this::class.java.name
+    override fun builder(): AnimBuilder = pool().get(POOL_KEY)
 }
 
-class AnimBuilder internal constructor() {
+class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder> {
 
     private var view: View? = null
 
@@ -41,7 +42,7 @@ class AnimBuilder internal constructor() {
 
     private var interpolator: TimeInterpolator? = null
 
-    private var evaluator: TypeEvaluator<Any>? = null
+    private var evaluator: TypeEvaluator<*>? = null
 
 
     fun with(view: View?): AnimBuilder = apply { this.view = view }
@@ -66,46 +67,61 @@ class AnimBuilder internal constructor() {
 
     fun onResume(onResume: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onResume = onResume }
 
-    fun interpolator(interpolator: ((input: Float) -> Float)?): AnimBuilder =
-            apply { if (interpolator != null) this.interpolator = TimeInterpolator { interpolator.invoke(it) } }
+    fun interpolator(interpolator: (input: Float) -> Float): AnimBuilder =
+            apply { this.interpolator = TimeInterpolator { interpolator.invoke(it) } }
 
     fun interpolator(interpolator: TimeInterpolator): AnimBuilder = apply { this.interpolator = interpolator }
 
-    fun evaluator(evaluator: ((fraction: Float, startValue: Any?, endValue: Any?) -> Any)?): AnimBuilder = apply {
-        if (evaluator != null)
-            this.evaluator = TypeEvaluator { fraction, startValue, endValue -> evaluator.invoke(fraction, startValue, endValue) }
+    fun <T : Any> evaluator(evaluator: (fraction: Float, startValue: T?, endValue: T?) -> T): AnimBuilder = apply {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            throw RuntimeException("Api 11 at least")
+        this.evaluator = TypeEvaluator<T> { fraction, startValue, endValue -> evaluator.invoke(fraction, startValue, endValue) }
     }
 
     @Suppress("UNCHECKED_CAST")
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun <T : Any> evaluator(evaluator: TypeEvaluator<T>): AnimBuilder = apply { this.evaluator = evaluator as TypeEvaluator<Any> }
+    fun <T : Any> evaluator(evaluator: TypeEvaluator<T>): AnimBuilder = apply {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            throw RuntimeException("Api 11 at least")
+        this.evaluator = evaluator as TypeEvaluator<Any>
+    }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun alpha(): ObjectAnimator = getAnim("alpha")
+    fun alpha(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("alpha")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun scaleX(): ObjectAnimator = getAnim("scaleX")
+    fun scaleX(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("scaleX")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun scaleY(): ObjectAnimator = getAnim("scaleY")
+    fun scaleY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("scaleY")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun translationX(): ObjectAnimator = getAnim("translationX")
+    fun translationX(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("translationX")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun translationY(): ObjectAnimator = getAnim("translationY")
+    fun translationY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("translationY")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun rotation(): ObjectAnimator = getAnim("rotation")
+    fun rotation(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotation")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun rotationX(): ObjectAnimator = getAnim("rotationX")
+    fun rotationX(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotationX")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
-    fun rotationY(): ObjectAnimator = getAnim("rotationY")
+    fun rotationY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotationY")) }
 
-    @RequiresApi(Build.VERSION_CODES.HONEYCOMB)
+    override fun recycle(): AnimBuilder = apply { pool().recycle(KAnim.POOL_KEY, reset()) }
+
+    override fun reset(): AnimBuilder = apply {
+        view = null
+        from = 0f
+        to = 0f
+        duration = 0L
+        delay = 0L
+        onStart = null
+        onEnd = null
+        onCancel = null
+        onRepeat = null
+        onPause = null
+        onResume = null
+        interpolator = null
+        evaluator = null
+    }
+
     private fun getAnim(anim: String): ObjectAnimator {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
+            throw RuntimeException("Api 11 at least")
         val animator: ObjectAnimator = ObjectAnimator.ofFloat(view, anim, from, to).setDuration(duration)
         animator.startDelay = delay
         if (interpolator != null)

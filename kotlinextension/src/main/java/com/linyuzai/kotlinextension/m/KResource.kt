@@ -1,12 +1,12 @@
 package com.linyuzai.kotlinextension.m
 
-import android.content.Context
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
-import android.support.annotation.ColorRes
-import android.support.annotation.DrawableRes
-import android.support.annotation.StringRes
+import android.os.Build
 import com.linyuzai.kotlinextension.Ex
+import com.linyuzai.kotlinextension.a.RequestContext
+import com.linyuzai.kotlinextension.pool
+import com.linyuzai.kotlinextension.u.PoolRecycler
 
 /**
  * Created by linyuzai on 2017/8/29.
@@ -14,19 +14,44 @@ import com.linyuzai.kotlinextension.Ex
  */
 internal object KResource : IResource {
 
-    private val res: Resources by lazy { Ex.context!!.resources }
+    internal val POOL_KEY: String = this::class.java.name
 
-    override fun getDrawable(id: Int): Drawable = res.getDrawable(id)
+    internal val res: Resources by lazy { Ex.context!!.resources }
 
-    override fun getString(id: Int): String = res.getString(id)
-
-    override fun getColor(id: Int): Int = res.getColor(id)
+    override fun operator(): ResourceOperator = pool().get(POOL_KEY)
 }
 
+class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator> {
+    private var resId: Int = 0
+    private var theme: Resources.Theme? = null
+
+    fun drawable(onGet: (drawable: Drawable) -> Unit): ResourceOperator = apply {
+        onGet.invoke(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                    KResource.res.getDrawable(resId, theme)
+                else
+                    KResource.res.getDrawable(resId))
+    }
+
+    fun color(onGet: (color: Int) -> Unit): ResourceOperator = apply {
+        onGet.invoke(
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    KResource.res.getColor(resId, theme)
+                else
+                    KResource.res.getColor(resId))
+    }
+
+    fun string(onGet: (string: String) -> Unit): ResourceOperator = apply { onGet.invoke(KResource.res.getString(resId)) }
+
+    override fun recycle(): ResourceOperator = apply { pool().recycle(KMemory.POOL_KEY, reset()) }
+
+    override fun reset(): ResourceOperator = apply {
+        resId = 0
+        theme = null
+    }
+}
+
+@RequestContext
 interface IResource {
-    fun getDrawable(@DrawableRes id: Int): Drawable
-
-    fun getString(@StringRes id: Int): String
-
-    fun getColor(@ColorRes id: Int): Int
+    fun operator(): ResourceOperator
 }

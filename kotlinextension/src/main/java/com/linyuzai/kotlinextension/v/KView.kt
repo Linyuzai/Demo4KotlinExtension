@@ -1,48 +1,59 @@
 package com.linyuzai.kotlinextension.v
 
 import android.view.View
-import com.linyuzai.kotlinextension.handler
+import com.linyuzai.kotlinextension.*
+import com.linyuzai.kotlinextension.u.PoolRecycler
 
 /**
  * Created by linyuzai on 2017/5/12 0012.
  * @author linyuzai
  */
 internal object KView : IView {
-    override fun show(vararg views: View): IView = apply {
-        views.filter { it.visibility != View.VISIBLE }.forEach { it.visibility = View.VISIBLE }
+    internal val POOL_KEY: String = this::class.java.name
+    override fun operator(): ViewOperator = pool().get(POOL_KEY)
+}
+
+class ViewOperator internal constructor() : PoolRecycler<ViewOperator> {
+
+    private var views: Array<out View>? = null
+
+    private var isNullSafe: Boolean = true
+
+    fun views(vararg views: View): ViewOperator = apply { this.views = views }
+
+    fun nullSafe(): ViewOperator = apply { this.isNullSafe = true }
+
+    fun notNullSafe(): ViewOperator = apply { this.isNullSafe = false }
+
+    fun show(): ViewOperator = apply {
+        if (isNullSafe)
+            views?.filter { !it.isVisible() }?.forEach { it.visible() }
+        else
+            views!!.filter { !it.isVisible() }.forEach { it.visible() }
     }
 
-    override fun show(view: View, delay: Long): IView = apply {
-        handler().run(Runnable { if (view.visibility != View.VISIBLE) view.visibility = View.VISIBLE }, delay)
+    fun hold(): ViewOperator = apply {
+        if (isNullSafe)
+            views?.filter { !it.isInvisible() }?.forEach { it.invisible() }
+        else
+            views!!.filter { !it.isInvisible() }.forEach { it.invisible() }
     }
 
-    override fun hide(vararg views: View): IView = apply {
-        views.filter { it.visibility != View.GONE }.forEach { it.visibility = View.GONE }
+    fun hide(): ViewOperator = apply {
+        if (isNullSafe)
+            views?.filter { !it.isGone() }?.forEach { it.gone() }
+        else
+            views!!.filter { !it.isGone() }.forEach { it.gone() }
     }
 
-    override fun hide(view: View, delay: Long): IView = apply {
-        handler().run(Runnable { if (view.visibility != View.GONE) view.visibility = View.GONE }, delay)
-    }
+    override fun recycle(): ViewOperator = apply { pool().recycle(KView.POOL_KEY, reset()) }
 
-    override fun hold(vararg views: View): IView = apply {
-        views.filter { it.visibility != View.GONE }.forEach { it.visibility = View.GONE }
-    }
-
-    override fun hold(view: View, delay: Long): IView = apply {
-        handler().run(Runnable { if (view.visibility != View.INVISIBLE) view.visibility = View.INVISIBLE }, delay)
+    override fun reset(): ViewOperator = apply {
+        views = null
+        isNullSafe = true
     }
 }
 
 interface IView {
-    fun show(vararg views: View): IView
-
-    fun show(view: View, delay: Long): IView
-
-    fun hide(vararg views: View): IView
-
-    fun hide(view: View, delay: Long): IView
-
-    fun hold(vararg views: View): IView
-
-    fun hold(view: View, delay: Long): IView
+    fun operator(): ViewOperator
 }

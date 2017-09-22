@@ -18,22 +18,33 @@ class MainActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         val button: Button = find(R.id.action_bar)
+        Ex.bind(application)
+                .configHandler()
+                .configMemory()
+                .configFile()
+                .configResource()
         startActivity(Intent(this, MainActivity::class.java))
         intent(MainActivity::class)
-        view().show(button, button).hide(button)
+        view().operator().views(button).nullSafe().show().recycle()
+        //button.set
         //animAlpha(0.0f, 0.0f, 100, button)
 
         setStatusBarColorRes(R.color.colorAccent)
         setStatusBarTranslucent()
 
-        shared().putList("key", arrayListOf<String>())
+        shared().operator()
 
         shared().memory().shared().memory()
 
+        var str: String? = null
+        memory().operator().key("").value("").default(null).get<String?> { str = it }
+
         log().enable()
 
-        anim().builder().with(button).onStart { }.onEnd { }.alpha().start()
+        anim().builder().with(button).onStart { }.onEnd { }.interpolator { a -> a.dec() }
 
         service().vibrator().vibrate(1000)
+
+        file().operator().dir("").file("").create {}
     }
 }

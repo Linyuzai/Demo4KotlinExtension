@@ -1,13 +1,12 @@
 package com.linyuzai.kotlinextension
 
-import com.linyuzai.kotlinextension.c.IHandler
-import com.linyuzai.kotlinextension.c.IService
-import com.linyuzai.kotlinextension.c.KHandler
-import com.linyuzai.kotlinextension.c.KService
 import com.linyuzai.kotlinextension.m.*
 import com.linyuzai.kotlinextension.u.ILog
 import com.linyuzai.kotlinextension.u.KLog
-import com.linyuzai.kotlinextension.u.OnlyForAndroid
+import com.linyuzai.kotlinextension.a.OnlyForAndroid
+import com.linyuzai.kotlinextension.c.*
+import com.linyuzai.kotlinextension.u.IPool
+import com.linyuzai.kotlinextension.u.KPool
 import com.linyuzai.kotlinextension.v.IAnim
 import com.linyuzai.kotlinextension.v.IView
 import com.linyuzai.kotlinextension.v.KAnim
@@ -40,6 +39,10 @@ fun Any.serialize(): String? =
 
 fun Any.memory(): IMemory = KMemory
 
+fun Any.file(): IFile = KFile
+
+fun Any.pool(): IPool = KPool
+
 @OnlyForAndroid
 fun Any.res(): IResource = KResource
 
@@ -60,6 +63,9 @@ fun Any.handler(): IHandler = KHandler
 
 @OnlyForAndroid
 fun Any.service(): IService = KService
+
+@OnlyForAndroid
+fun Any.permission(): IPermission = KPermission
 
 
 

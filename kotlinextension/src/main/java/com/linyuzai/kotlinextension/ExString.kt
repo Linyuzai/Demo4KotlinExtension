@@ -3,7 +3,7 @@
 package com.linyuzai.kotlinextension
 
 import android.util.Base64
-import com.linyuzai.kotlinextension.u.OnlyForAndroid
+import com.linyuzai.kotlinextension.a.OnlyForAndroid
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.io.ObjectInputStream
