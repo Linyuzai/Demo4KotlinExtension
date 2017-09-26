@@ -24,7 +24,7 @@ internal object KResource : IResource {
     override fun operator(): ResourceOperator = pool().get(POOL_KEY)
 }
 
-class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator> {
+class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator>() {
     private var resId: Int = 0
     private var theme: Resources.Theme? = null
 
@@ -46,7 +46,7 @@ class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator> {
 
     fun string(onGet: (string: String) -> Unit): ResourceOperator = apply { onGet.invoke(KResource.res.getString(resId)) }
 
-    override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
+    //override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
 
     override fun reset(): ResourceOperator = apply {
         resId = 0

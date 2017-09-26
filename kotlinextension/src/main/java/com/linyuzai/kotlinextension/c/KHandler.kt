@@ -21,11 +21,11 @@ internal object KHandler : IHandler {
     override fun operator(): HandlerOperator = pool().get(POOL_KEY)
 }
 
-class HandlerOperator internal constructor() : PoolRecycler<HandlerOperator> {
+class HandlerOperator internal constructor() : PoolRecycler<HandlerOperator>() {
 
-    var runnable: Runnable? = null
+    private var runnable: Runnable? = null
 
-    var delay: Long = 0
+    private var delay: Long = 0
 
     fun runnable(runnable: Runnable): HandlerOperator = apply { this.runnable = runnable }
 
@@ -50,7 +50,7 @@ class HandlerOperator internal constructor() : PoolRecycler<HandlerOperator> {
         KHandler.runnableList.clear()
     }
 
-    override fun recycle() = pool().recycle(KHandler.POOL_KEY, reset())
+    //override fun recycle() = pool().recycle(KHandler.POOL_KEY, reset())
 
     override fun reset(): HandlerOperator = apply {
         runnable = null

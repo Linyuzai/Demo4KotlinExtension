@@ -19,7 +19,7 @@ internal object KAnim : IAnim {
     override fun builder(): AnimBuilder = pool().get(POOL_KEY)
 }
 
-class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder> {
+class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder>() {
 
     private var view: View? = null
 
@@ -104,7 +104,7 @@ class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder> {
 
     fun rotationY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotationY")) }
 
-    override fun recycle() = pool().recycle(KAnim.POOL_KEY, reset())
+    //override fun recycle() = pool().recycle(KAnim.POOL_KEY, reset())
 
     override fun reset(): AnimBuilder = apply {
         view = null

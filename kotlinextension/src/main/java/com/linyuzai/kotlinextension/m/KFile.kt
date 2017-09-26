@@ -16,7 +16,7 @@ internal object KFile : IFile {
     override fun operator(): FileOperator = pool().get(POOL_KEY)
 }
 
-class FileOperator internal constructor() : PoolRecycler<FileOperator> {
+class FileOperator internal constructor() : PoolRecycler<FileOperator>() {
 
     private var file: String? = null
 
@@ -43,7 +43,7 @@ class FileOperator internal constructor() : PoolRecycler<FileOperator> {
         onRename?.invoke(File(dir, file).renameTo(File(dir, newName)))
     }
 
-    override fun recycle() = pool().recycle(KFile.POOL_KEY, reset())
+    //override fun recycle() = pool().recycle(KFile.POOL_KEY, reset())
 
     override fun reset(): FileOperator = apply {
         file = null

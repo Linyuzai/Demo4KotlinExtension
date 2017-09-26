@@ -27,7 +27,7 @@ internal object KPool : IPool {
     override fun <T : PoolRecycler<T>> get(tag: String): T {
         synchronized(poolMap) {
             if (poolMap.contains(tag)) {
-                return (poolMap[tag]!!.poll() ?: creatorMap[tag]!!.invoke()) as T
+                return (poolMap[tag]!!.poll() ?: creatorMap[tag]!!.invoke().apply { (this as T).poolTag = tag }) as T
             } else throw RuntimeException("use builder to build before get")
         }
     }
@@ -41,7 +41,7 @@ internal object KPool : IPool {
     }
 }
 
-class PoolBuilder internal constructor() : PoolRecycler<PoolBuilder> {
+class PoolBuilder internal constructor() : PoolRecycler<PoolBuilder>() {
 
     private var tag: String? = null
 
@@ -77,8 +77,10 @@ interface IPool {
     fun recycle(tag: String, item: Any)
 }
 
-interface PoolRecycler<out T> {
-    fun recycle()
+abstract class PoolRecycler<out T> {
+    internal var poolTag: String? = null
 
-    fun reset(): T
+    open fun recycle() = pool().recycle(poolTag!!, reset() as Any)
+
+    abstract fun reset(): T
 }

@@ -17,4 +17,9 @@
     <string name="get_pool_and_recycle">get_pool_and_recycle</string>
     <string name="get_pool_no_recycle">get_pool_no_recycle</string>
     <string name="pool_text">pool_text</string>
+    <string name="post">post</string>
+    <string name="handler_text">handler_text</string>
+    <string name="post_and_remove">post_and_remove</string>
+    <string name="post_and_remove_all">post_and_remove_all</string>
+    <string name="post_delay">post_delay</string>
 </resources>

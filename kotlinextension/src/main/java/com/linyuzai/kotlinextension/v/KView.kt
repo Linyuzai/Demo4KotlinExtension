@@ -16,7 +16,7 @@ internal object KView : IView {
     override fun operator(): ViewOperator = pool().get(POOL_KEY)
 }
 
-class ViewOperator internal constructor() : PoolRecycler<ViewOperator> {
+class ViewOperator internal constructor() : PoolRecycler<ViewOperator>() {
 
     private var views: Array<out View>? = null
 
@@ -49,7 +49,7 @@ class ViewOperator internal constructor() : PoolRecycler<ViewOperator> {
             views!!.filter { !it.isGone() }.forEach { it.gone() }
     }
 
-    override fun recycle() = pool().recycle(KView.POOL_KEY, reset())
+    //override fun recycle() = pool().recycle(KView.POOL_KEY, reset())
 
     override fun reset(): ViewOperator = apply {
         views = null

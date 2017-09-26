@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mHandlerButton.setOnClickListener { }
+        mHandlerButton.setOnClickListener { intent(HandlerActivity::class) }
         mIntentButton.setOnClickListener { }
         mPermissionButton.setOnClickListener { }
         mServiceButton.setOnClickListener { }

@@ -28,7 +28,7 @@ internal object KShared : IShared {
 
 }
 
-class SharedOperator internal constructor() : PoolRecycler<SharedOperator> {
+class SharedOperator internal constructor() : PoolRecycler<SharedOperator>() {
     private var key: String? = null
     private var value: Any? = null
     private var default: Any? = null
@@ -143,7 +143,7 @@ class SharedOperator internal constructor() : PoolRecycler<SharedOperator> {
             KShared.prefs.edit().clear().commit()
     }
 
-    override fun recycle() = pool().recycle(KShared.POOL_KEY, reset())
+    //override fun recycle() = pool().recycle(KShared.POOL_KEY, reset())
 
     override fun reset(): SharedOperator = apply {
         key = null

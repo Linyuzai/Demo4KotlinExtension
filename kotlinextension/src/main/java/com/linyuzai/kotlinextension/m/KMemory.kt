@@ -19,7 +19,7 @@ internal object KMemory : IMemory {
 }
 
 @Suppress("UNCHECKED_CAST")
-class MemoryOperator internal constructor() : PoolRecycler<MemoryOperator> {
+class MemoryOperator internal constructor() : PoolRecycler<MemoryOperator>() {
 
     private var key: String? = null
 
@@ -40,7 +40,7 @@ class MemoryOperator internal constructor() : PoolRecycler<MemoryOperator> {
 
     fun remove(): MemoryOperator = apply { KMemory.map.remove(key) }
 
-    override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
+    //override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
     //getOrDefault since jdk1.8
     //map.getOrDefault(key, defValue as Any) as T
 
