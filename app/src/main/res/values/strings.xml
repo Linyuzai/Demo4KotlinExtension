@@ -13,7 +13,7 @@
     <string name="log">log</string>
     <string name="anim">anim</string>
     <string name="view">view</string>
-    <string name="add_pool">add_pool</string>
+    <string name="create_pool">create_pool</string>
     <string name="get_pool_and_recycle">get_pool_and_recycle</string>
     <string name="get_pool_no_recycle">get_pool_no_recycle</string>
     <string name="pool_text">pool_text</string>

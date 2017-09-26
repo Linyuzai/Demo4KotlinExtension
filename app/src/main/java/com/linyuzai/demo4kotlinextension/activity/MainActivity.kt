@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        mHandlerButton.setOnClickListener { intent(MainActivity::class) }
+        mHandlerButton.setOnClickListener { }
         mIntentButton.setOnClickListener { }
         mPermissionButton.setOnClickListener { }
         mServiceButton.setOnClickListener { }
@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         mSharedButton.setOnClickListener { }
         mAlgorithmButton.setOnClickListener { }
         mLogButton.setOnClickListener { }
-        mPoolButton.setOnClickListener { }
+        mPoolButton.setOnClickListener { intent(PoolActivity::class) }
         mAnimButton.setOnClickListener { }
         mViewButton.setOnClickListener { }
     }

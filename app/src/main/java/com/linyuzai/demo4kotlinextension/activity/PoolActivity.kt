@@ -14,7 +14,7 @@ class PoolActivity : AppCompatActivity() {
 
     private val TAG: String = this::class.java.name
 
-    private val mAddPoolButton: Button by lazy { find<Button>(R.id.add_pool) }
+    private val mCreatePoolButton: Button by lazy { find<Button>(R.id.create_pool) }
 
     private val mGetPoolAndRecycleButton: Button by lazy { find<Button>(R.id.get_pool_and_recycle) }
 
@@ -25,7 +25,7 @@ class PoolActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_pool)
-        mAddPoolButton.setOnClickListener { pool().builder().tag(TAG).from { Builder() }.build().recycle() }
+        mCreatePoolButton.setOnClickListener { pool().builder().tag(TAG).from { Builder() }.build().recycle() }
         mGetPoolAndRecycleButton.setOnClickListener {
             val builder: Builder = pool().get(TAG)
             mPoolText.text = builder.toString()

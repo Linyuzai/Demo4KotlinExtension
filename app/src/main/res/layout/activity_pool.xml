@@ -7,10 +7,10 @@
     tools:context="com.linyuzai.demo4kotlinextension.activity.PoolActivity">
 
     <Button
-        android:id="@+id/add_pool"
+        android:id="@+id/create_pool"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_pool" />
+        android:text="@string/create_pool" />
 
     <Button
         android:id="@+id/get_pool_and_recycle"
