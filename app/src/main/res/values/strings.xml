@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">Demo4KotlinExtension</string>
+    <string name="pool">pool</string>
+    <string name="handler">handler</string>
+    <string name="intent">intent</string>
+    <string name="permission">permission</string>
+    <string name="service">service</string>
+    <string name="file">file</string>
+    <string name="memory">memory</string>
+    <string name="resource">resource</string>
+    <string name="shared">shared</string>
+    <string name="algorithm">algorithm</string>
+    <string name="log">log</string>
+    <string name="anim">anim</string>
+    <string name="view">view</string>
+    <string name="add_pool">add_pool</string>
+    <string name="get_pool_and_recycle">get_pool_and_recycle</string>
+    <string name="get_pool_no_recycle">get_pool_no_recycle</string>
+    <string name="pool_text">pool_text</string>
 </resources>

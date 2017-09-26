@@ -1,5 +1,8 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.m
 
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.pool
 import com.linyuzai.kotlinextension.u.PoolRecycler
 import java.util.concurrent.ConcurrentHashMap
@@ -37,7 +40,7 @@ class MemoryOperator internal constructor() : PoolRecycler<MemoryOperator> {
 
     fun remove(): MemoryOperator = apply { KMemory.map.remove(key) }
 
-    override fun recycle(): MemoryOperator = apply { pool().recycle(KMemory.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
     //getOrDefault since jdk1.8
     //map.getOrDefault(key, defValue as Any) as T
 

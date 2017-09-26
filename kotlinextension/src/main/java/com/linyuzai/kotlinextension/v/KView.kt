@@ -1,7 +1,10 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.v
 
 import android.view.View
 import com.linyuzai.kotlinextension.*
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.u.PoolRecycler
 
 /**
@@ -46,7 +49,7 @@ class ViewOperator internal constructor() : PoolRecycler<ViewOperator> {
             views!!.filter { !it.isGone() }.forEach { it.gone() }
     }
 
-    override fun recycle(): ViewOperator = apply { pool().recycle(KView.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KView.POOL_KEY, reset())
 
     override fun reset(): ViewOperator = apply {
         views = null

@@ -1,6 +1,9 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.u
 
 import android.util.Log
+import com.linyuzai.kotlinextension.a.OpenApi
 
 /**
  * Created by linyuzai on 2017/5/16 0016.

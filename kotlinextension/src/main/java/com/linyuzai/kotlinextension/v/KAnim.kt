@@ -1,8 +1,11 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.v
 
 import android.animation.*
 import android.os.Build
 import android.view.View
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.pool
 import com.linyuzai.kotlinextension.u.PoolRecycler
 
@@ -101,7 +104,7 @@ class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder> {
 
     fun rotationY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotationY")) }
 
-    override fun recycle(): AnimBuilder = apply { pool().recycle(KAnim.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KAnim.POOL_KEY, reset())
 
     override fun reset(): AnimBuilder = apply {
         view = null

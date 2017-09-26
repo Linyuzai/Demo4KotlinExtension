@@ -1,5 +1,8 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.u
 
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.pool
 import java.util.*
 
@@ -21,7 +24,7 @@ internal object KPool : IPool {
     override fun builder(): PoolBuilder = get(POOL_KEY)
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T> get(tag: String): T {
+    override fun <T : PoolRecycler<T>> get(tag: String): T {
         synchronized(poolMap) {
             if (poolMap.contains(tag)) {
                 return (poolMap[tag]!!.poll() ?: creatorMap[tag]!!.invoke()) as T
@@ -58,7 +61,7 @@ class PoolBuilder internal constructor() : PoolRecycler<PoolBuilder> {
         }
     }
 
-    override fun recycle(): PoolBuilder = apply { pool().recycle(KPool.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KPool.POOL_KEY, reset())
 
     override fun reset(): PoolBuilder = apply {
         tag = null
@@ -69,13 +72,13 @@ class PoolBuilder internal constructor() : PoolRecycler<PoolBuilder> {
 interface IPool {
     fun builder(): PoolBuilder
 
-    fun <T> get(tag: String): T
+    fun <T : PoolRecycler<T>> get(tag: String): T
 
     fun recycle(tag: String, item: Any)
 }
 
 interface PoolRecycler<out T> {
-    fun recycle(): T
+    fun recycle()
 
     fun reset(): T
 }

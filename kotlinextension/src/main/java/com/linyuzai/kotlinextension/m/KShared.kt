@@ -1,9 +1,12 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.m
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.SharedPreferences
 import com.linyuzai.kotlinextension.Ex
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.a.RequestContext
 import com.linyuzai.kotlinextension.deserialize
 import com.linyuzai.kotlinextension.pool
@@ -140,7 +143,7 @@ class SharedOperator internal constructor() : PoolRecycler<SharedOperator> {
             KShared.prefs.edit().clear().commit()
     }
 
-    override fun recycle(): SharedOperator = apply { pool().recycle(KShared.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KShared.POOL_KEY, reset())
 
     override fun reset(): SharedOperator = apply {
         key = null

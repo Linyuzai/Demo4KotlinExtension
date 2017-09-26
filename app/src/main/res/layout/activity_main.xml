@@ -1,9 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.linyuzai.demo4kotlinextension.MainActivity">
+    tools:context="com.linyuzai.demo4kotlinextension.activity.MainActivity">
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/handler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/handler" />
+
+        <Button
+            android:id="@+id/intent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/intent" />
+
+        <Button
+            android:id="@+id/permission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/permission" />
+
+        <Button
+            android:id="@+id/service"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/service" />
+
+        <Button
+            android:id="@+id/file"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/file" />
+
+        <Button
+            android:id="@+id/memory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/memory" />
+
+        <Button
+            android:id="@+id/resource"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/resource" />
+
+        <Button
+            android:id="@+id/shared"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/shared" />
+
+        <Button
+            android:id="@+id/algorithm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/algorithm" />
+
+        <Button
+            android:id="@+id/log"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/log" />
+
+        <Button
+            android:id="@+id/pool"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pool" />
+
+        <Button
+            android:id="@+id/anim"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/anim" />
+
+        <Button
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/view" />
+    </LinearLayout>
+</ScrollView>

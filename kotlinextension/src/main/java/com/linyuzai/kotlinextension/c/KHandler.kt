@@ -1,7 +1,10 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.c
 
 import android.os.Handler
 import android.os.Looper
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.u.PoolRecycler
 import com.linyuzai.kotlinextension.pool
 import java.util.*
@@ -47,7 +50,7 @@ class HandlerOperator internal constructor() : PoolRecycler<HandlerOperator> {
         KHandler.runnableList.clear()
     }
 
-    override fun recycle(): HandlerOperator = apply { pool().recycle(KHandler.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KHandler.POOL_KEY, reset())
 
     override fun reset(): HandlerOperator = apply {
         runnable = null

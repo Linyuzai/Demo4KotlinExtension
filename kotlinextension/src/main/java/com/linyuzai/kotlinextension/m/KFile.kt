@@ -1,5 +1,8 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.m
 
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.pool
 import com.linyuzai.kotlinextension.u.PoolRecycler
 import java.io.File
@@ -40,7 +43,7 @@ class FileOperator internal constructor() : PoolRecycler<FileOperator> {
         onRename?.invoke(File(dir, file).renameTo(File(dir, newName)))
     }
 
-    override fun recycle(): FileOperator = apply { pool().recycle(KFile.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KFile.POOL_KEY, reset())
 
     override fun reset(): FileOperator = apply {
         file = null

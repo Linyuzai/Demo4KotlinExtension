@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.linyuzai.demo4kotlinextension.activity.PoolActivity">
+
+    <Button
+        android:id="@+id/add_pool"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_pool" />
+
+    <Button
+        android:id="@+id/get_pool_and_recycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/get_pool_and_recycle" />
+
+    <Button
+        android:id="@+id/get_pool_no_recycle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/get_pool_no_recycle" />
+
+    <TextView
+        android:id="@+id/pool_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pool_text" />
+</LinearLayout>

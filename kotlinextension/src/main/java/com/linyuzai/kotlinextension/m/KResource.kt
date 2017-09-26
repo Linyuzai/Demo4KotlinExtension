@@ -1,9 +1,12 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.m
 
 import android.content.res.Resources
 import android.graphics.drawable.Drawable
 import android.os.Build
 import com.linyuzai.kotlinextension.Ex
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.a.RequestContext
 import com.linyuzai.kotlinextension.pool
 import com.linyuzai.kotlinextension.u.PoolRecycler
@@ -43,7 +46,7 @@ class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator> {
 
     fun string(onGet: (string: String) -> Unit): ResourceOperator = apply { onGet.invoke(KResource.res.getString(resId)) }
 
-    override fun recycle(): ResourceOperator = apply { pool().recycle(KMemory.POOL_KEY, reset()) }
+    override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
 
     override fun reset(): ResourceOperator = apply {
         resId = 0

@@ -1,3 +1,5 @@
+@file:OpenApi
+
 package com.linyuzai.kotlinextension.c
 
 import android.app.*
@@ -11,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import com.linyuzai.kotlinextension.*
+import com.linyuzai.kotlinextension.a.OpenApi
 import com.linyuzai.kotlinextension.a.RequestContext
 
 /**
