@@ -24,39 +24,39 @@ internal object KShared : IShared {
     internal val SIZE: String = "_size"
     internal val prefs: SharedPreferences by lazy { Ex.context!!.getSharedPreferences("shared_preferences", Context.MODE_PRIVATE) }
 
-    override fun operator(): SharedOperator = pool().get(POOL_KEY)
+    override fun access(): SharedAccess = pool().get(POOL_KEY)
 
 }
 
-class SharedOperator internal constructor() : PoolRecycler<SharedOperator>() {
+class SharedAccess internal constructor() : PoolRecycler<SharedAccess>() {
     private var key: String? = null
     private var value: Any? = null
     private var default: Any? = null
     private var isListValue: Boolean = false
     private var isApply: Boolean = true
 
-    fun key(key: String): SharedOperator = apply { this.key = key }
+    fun key(key: String): SharedAccess = apply { this.key = key }
 
-    fun value(value: Any?): SharedOperator = apply { this.value = value }
+    fun value(value: Any?): SharedAccess = apply { this.value = value }
 
-    fun default(default: Any?): SharedOperator = apply { this.default = default }
+    fun default(default: Any?): SharedAccess = apply { this.default = default }
 
-    fun listValue(): SharedOperator = apply { this.isListValue = true }
+    fun listValue(): SharedAccess = apply { this.isListValue = true }
 
-    fun sampleValue(): SharedOperator = apply { this.isListValue = false }
+    fun sampleValue(): SharedAccess = apply { this.isListValue = false }
 
-    fun useApply(): SharedOperator = apply { this.isApply = true }
+    fun useApply(): SharedAccess = apply { this.isApply = true }
 
-    fun useCommit(): SharedOperator = apply { this.isApply = false }
+    fun useCommit(): SharedAccess = apply { this.isApply = false }
 
-    fun put(): SharedOperator = apply { put(key!!, value) }
+    fun put(): SharedAccess = apply { put(key!!, value) }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T> get(onGet: (value: T?) -> Unit): SharedOperator = apply {
+    fun <T> get(onGet: (value: T?) -> Unit): SharedAccess = apply {
         onGet.invoke(if (isListValue) getCollection<Any>(key!!) as T else get(key!!, default) as T)
     }
 
-    fun remove(): SharedOperator = apply { if (isListValue) removeCollection(key!!) else remove(key!!) }
+    fun remove(): SharedAccess = apply { if (isListValue) removeCollection(key!!) else remove(key!!) }
 
     @SuppressLint("CommitPrefEdits")
     private fun <T> put(key: String, value: T?) {
@@ -136,7 +136,7 @@ class SharedOperator internal constructor() : PoolRecycler<SharedOperator>() {
     }
 
     @SuppressLint("CommitPrefEdits")
-    fun clear(): SharedOperator = apply {
+    fun clear(): SharedAccess = apply {
         if (isApply)
             KShared.prefs.edit().clear().apply()
         else
@@ -145,7 +145,7 @@ class SharedOperator internal constructor() : PoolRecycler<SharedOperator>() {
 
     //override fun recycle() = pool().recycle(KShared.POOL_KEY, reset())
 
-    override fun reset(): SharedOperator = apply {
+    override fun reset(): SharedAccess = apply {
         key = null
         value = null
         default = null
@@ -156,6 +156,5 @@ class SharedOperator internal constructor() : PoolRecycler<SharedOperator>() {
 
 @RequestContext
 interface IShared {
-
-    fun operator(): SharedOperator
+    fun access(): SharedAccess
 }

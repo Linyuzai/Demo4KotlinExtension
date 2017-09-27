@@ -26,17 +26,17 @@ class HandlerActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_handler)
-        mPostButton.setOnClickListener { handler().operator().runnable { mHandlerText.text = "post" }.post().recycle() }
+        mPostButton.setOnClickListener { handler().access().runnable { mHandlerText.text = "post" }.post().recycle() }
         mPostDelayButton.setOnClickListener {
-            handler().operator().runnable { mHandlerText.text = "post delay" }.delay(2000).post().recycle()
+            handler().access().runnable { mHandlerText.text = "post delay" }.delay(2000).post().recycle()
         }
         mPostAndRemoveButton.setOnClickListener {
-            handler().operator().runnable { mHandlerText.text = "post and remove" }.delay(3000).post().intercept().recycle()
+            handler().access().runnable { mHandlerText.text = "post and remove" }.delay(3000).post().intercept().recycle()
         }
         mPostAndRemoveAllButton.setOnClickListener {
-            handler().operator().runnable { mHandlerText.text = "post and remove all 1" }.post().recycle()
-            handler().operator().runnable { mHandlerText.text = "post and remove all 2" }.delay(3000).post().recycle()
-            handler().operator().clear()
+            handler().access().runnable { mHandlerText.text = "post and remove all 1" }.post().recycle()
+            handler().access().runnable { mHandlerText.text = "post and remove all 2" }.delay(3000).post().recycle()
+            handler().access().clear()
         }
     }
 }

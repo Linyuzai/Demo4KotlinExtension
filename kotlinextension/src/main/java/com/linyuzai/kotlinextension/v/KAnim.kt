@@ -16,10 +16,10 @@ import com.linyuzai.kotlinextension.u.PoolRecycler
 
 internal object KAnim : IAnim {
     internal val POOL_KEY: String = this::class.java.name
-    override fun builder(): AnimBuilder = pool().get(POOL_KEY)
+    override fun access(): AnimAccess = pool().get(POOL_KEY)
 }
 
-class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder>() {
+class AnimAccess internal constructor() : PoolRecycler<AnimAccess>() {
 
     private var view: View? = null
 
@@ -48,65 +48,65 @@ class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder>() {
     private var evaluator: TypeEvaluator<*>? = null
 
 
-    fun with(view: View?): AnimBuilder = apply { this.view = view }
+    fun with(view: View?): AnimAccess = apply { this.view = view }
 
-    fun from(from: Float): AnimBuilder = apply { this.from = from }
+    fun from(from: Float): AnimAccess = apply { this.from = from }
 
-    fun to(to: Float): AnimBuilder = apply { this.to = to }
+    fun to(to: Float): AnimAccess = apply { this.to = to }
 
-    fun duration(duration: Long): AnimBuilder = apply { this.duration = duration }
+    fun duration(duration: Long): AnimAccess = apply { this.duration = duration }
 
-    fun delay(delay: Long): AnimBuilder = apply { this.delay = delay }
+    fun delay(delay: Long): AnimAccess = apply { this.delay = delay }
 
-    fun onStart(onStart: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onStart = onStart }
+    fun onStart(onStart: (anim: Animator?) -> Unit): AnimAccess = apply { this.onStart = onStart }
 
-    fun onEnd(onEnd: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onEnd = onEnd }
+    fun onEnd(onEnd: (anim: Animator?) -> Unit): AnimAccess = apply { this.onEnd = onEnd }
 
-    fun onCancel(onCancel: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onCancel = onCancel }
+    fun onCancel(onCancel: (anim: Animator?) -> Unit): AnimAccess = apply { this.onCancel = onCancel }
 
-    fun onRepeat(onRepeat: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onRepeat = onRepeat }
+    fun onRepeat(onRepeat: (anim: Animator?) -> Unit): AnimAccess = apply { this.onRepeat = onRepeat }
 
-    fun onPause(onPause: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onPause = onPause }
+    fun onPause(onPause: (anim: Animator?) -> Unit): AnimAccess = apply { this.onPause = onPause }
 
-    fun onResume(onResume: ((anim: Animator?) -> Unit)?): AnimBuilder = apply { this.onResume = onResume }
+    fun onResume(onResume: (anim: Animator?) -> Unit): AnimAccess = apply { this.onResume = onResume }
 
-    fun interpolator(interpolator: (input: Float) -> Float): AnimBuilder =
+    fun interpolator(interpolator: (input: Float) -> Float): AnimAccess =
             apply { this.interpolator = TimeInterpolator { interpolator.invoke(it) } }
 
-    fun interpolator(interpolator: TimeInterpolator): AnimBuilder = apply { this.interpolator = interpolator }
+    fun interpolator(interpolator: TimeInterpolator): AnimAccess = apply { this.interpolator = interpolator }
 
-    fun <T : Any> evaluator(evaluator: (fraction: Float, startValue: T?, endValue: T?) -> T): AnimBuilder = apply {
+    fun <T : Any> evaluator(evaluator: (fraction: Float, startValue: T?, endValue: T?) -> T): AnimAccess = apply {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
             throw RuntimeException("Api 11 at least")
         this.evaluator = TypeEvaluator<T> { fraction, startValue, endValue -> evaluator.invoke(fraction, startValue, endValue) }
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <T : Any> evaluator(evaluator: TypeEvaluator<T>): AnimBuilder = apply {
+    fun <T : Any> evaluator(evaluator: TypeEvaluator<T>): AnimAccess = apply {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB)
             throw RuntimeException("Api 11 at least")
         this.evaluator = evaluator as TypeEvaluator<Any>
     }
 
-    fun alpha(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("alpha")) }
+    fun alpha(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("alpha")) }
 
-    fun scaleX(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("scaleX")) }
+    fun scaleX(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("scaleX")) }
 
-    fun scaleY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("scaleY")) }
+    fun scaleY(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("scaleY")) }
 
-    fun translationX(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("translationX")) }
+    fun translationX(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("translationX")) }
 
-    fun translationY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("translationY")) }
+    fun translationY(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("translationY")) }
 
-    fun rotation(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotation")) }
+    fun rotation(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("rotation")) }
 
-    fun rotationX(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotationX")) }
+    fun rotationX(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("rotationX")) }
 
-    fun rotationY(onGet: (anim: ObjectAnimator) -> Unit): AnimBuilder = apply { onGet.invoke(getAnim("rotationY")) }
+    fun rotationY(onGet: (anim: ObjectAnimator) -> Unit): AnimAccess = apply { onGet.invoke(getAnim("rotationY")) }
 
     //override fun recycle() = pool().recycle(KAnim.POOL_KEY, reset())
 
-    override fun reset(): AnimBuilder = apply {
+    override fun reset(): AnimAccess = apply {
         view = null
         from = 0f
         to = 0f
@@ -167,5 +167,5 @@ class AnimBuilder internal constructor() : PoolRecycler<AnimBuilder>() {
 }
 
 interface IAnim {
-    fun builder(): AnimBuilder
+    fun access(): AnimAccess
 }

@@ -21,14 +21,14 @@ internal object KResource : IResource {
 
     internal val res: Resources by lazy { Ex.context!!.resources }
 
-    override fun operator(): ResourceOperator = pool().get(POOL_KEY)
+    override fun access(): ResourceAccess = pool().get(POOL_KEY)
 }
 
-class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator>() {
+class ResourceAccess internal constructor() : PoolRecycler<ResourceAccess>() {
     private var resId: Int = 0
     private var theme: Resources.Theme? = null
 
-    fun drawable(onGet: (drawable: Drawable) -> Unit): ResourceOperator = apply {
+    fun drawable(onGet: (drawable: Drawable) -> Unit): ResourceAccess = apply {
         onGet.invoke(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                     KResource.res.getDrawable(resId, theme)
@@ -36,7 +36,7 @@ class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator>()
                     KResource.res.getDrawable(resId))
     }
 
-    fun color(onGet: (color: Int) -> Unit): ResourceOperator = apply {
+    fun color(onGet: (color: Int) -> Unit): ResourceAccess = apply {
         onGet.invoke(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     KResource.res.getColor(resId, theme)
@@ -44,11 +44,11 @@ class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator>()
                     KResource.res.getColor(resId))
     }
 
-    fun string(onGet: (string: String) -> Unit): ResourceOperator = apply { onGet.invoke(KResource.res.getString(resId)) }
+    fun string(onGet: (string: String) -> Unit): ResourceAccess = apply { onGet.invoke(KResource.res.getString(resId)) }
 
     //override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
 
-    override fun reset(): ResourceOperator = apply {
+    override fun reset(): ResourceAccess = apply {
         resId = 0
         theme = null
     }
@@ -56,5 +56,5 @@ class ResourceOperator internal constructor() : PoolRecycler<ResourceOperator>()
 
 @RequestContext
 interface IResource {
-    fun operator(): ResourceOperator
+    fun access(): ResourceAccess
 }

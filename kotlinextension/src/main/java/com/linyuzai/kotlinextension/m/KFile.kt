@@ -13,10 +13,10 @@ import java.io.File
  */
 internal object KFile : IFile {
     internal val POOL_KEY: String = this::class.java.name
-    override fun operator(): FileOperator = pool().get(POOL_KEY)
+    override fun access(): FileAccess = pool().get(POOL_KEY)
 }
 
-class FileOperator internal constructor() : PoolRecycler<FileOperator>() {
+class FileAccess internal constructor() : PoolRecycler<FileAccess>() {
 
     private var file: String? = null
 
@@ -24,13 +24,13 @@ class FileOperator internal constructor() : PoolRecycler<FileOperator>() {
 
     private var newName: String? = null
 
-    fun file(file: String): FileOperator = apply { this.file = file }
+    fun file(file: String): FileAccess = apply { this.file = file }
 
-    fun dir(dir: String): FileOperator = apply { this.dir = dir }
+    fun dir(dir: String): FileAccess = apply { this.dir = dir }
 
-    fun newName(name: String): FileOperator = apply { this.newName = name }
+    fun newName(name: String): FileAccess = apply { this.newName = name }
 
-    fun create(onCreate: ((file: File?) -> Unit)? = null): FileOperator = apply {
+    fun create(onCreate: ((file: File?) -> Unit)? = null): FileAccess = apply {
         val dir = File(this.dir)
         if (!dir.exists())
             dir.mkdirs()
@@ -39,18 +39,18 @@ class FileOperator internal constructor() : PoolRecycler<FileOperator>() {
         onCreate?.invoke(if (success) file else null)
     }
 
-    fun rename(onRename: ((isSuccess: Boolean) -> Unit)? = null): FileOperator = apply {
+    fun rename(onRename: ((isSuccess: Boolean) -> Unit)? = null): FileAccess = apply {
         onRename?.invoke(File(dir, file).renameTo(File(dir, newName)))
     }
 
     //override fun recycle() = pool().recycle(KFile.POOL_KEY, reset())
 
-    override fun reset(): FileOperator = apply {
+    override fun reset(): FileAccess = apply {
         file = null
         dir = null
     }
 }
 
 interface IFile {
-    fun operator(): FileOperator
+    fun access(): FileAccess
 }

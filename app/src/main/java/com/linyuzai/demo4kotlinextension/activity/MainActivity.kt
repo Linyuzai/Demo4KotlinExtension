@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity() {
         mPermissionButton.setOnClickListener { }
         mServiceButton.setOnClickListener { }
         mFileButton.setOnClickListener { }
-        mMemoryButton.setOnClickListener { }
+        mMemoryButton.setOnClickListener { intent(MemoryActivity::class) }
         mResourceButton.setOnClickListener { }
         mSharedButton.setOnClickListener { }
         mAlgorithmButton.setOnClickListener { }

@@ -15,11 +15,11 @@ internal object KMemory : IMemory {
     internal val POOL_KEY: String = this::class.java.name
     internal val map: ConcurrentHashMap<String, Any?> = ConcurrentHashMap()
 
-    override fun operator(): MemoryOperator = pool().get(POOL_KEY)
+    override fun access(): MemoryAccess = pool().get(POOL_KEY)
 }
 
 @Suppress("UNCHECKED_CAST")
-class MemoryOperator internal constructor() : PoolRecycler<MemoryOperator>() {
+class MemoryAccess internal constructor() : PoolRecycler<MemoryAccess>() {
 
     private var key: String? = null
 
@@ -27,24 +27,24 @@ class MemoryOperator internal constructor() : PoolRecycler<MemoryOperator>() {
 
     private var default: Any? = null
 
-    fun key(key: String): MemoryOperator = apply { this.key = key }
+    fun key(key: String): MemoryAccess = apply { this.key = key }
 
-    fun <T : Any?> value(value: T?): MemoryOperator = apply { this.value = value }
+    fun <T : Any?> value(value: T?): MemoryAccess = apply { this.value = value }
 
-    fun <T : Any?> default(default: T?): MemoryOperator = apply { this.default = default }
+    fun <T : Any?> default(default: T?): MemoryAccess = apply { this.default = default }
 
-    fun put(): MemoryOperator = apply { KMemory.map[key!!] = value }
+    fun put(): MemoryAccess = apply { KMemory.map[key!!] = value }
 
     //@JvmOverloads
-    fun <T> get(onGet: (T?) -> Unit): MemoryOperator = apply { onGet.invoke((KMemory.map[key] ?: default) as T) }
+    fun <T> get(onGet: (T?) -> Unit): MemoryAccess = apply { onGet.invoke((KMemory.map[key] ?: default) as T) }
 
-    fun remove(): MemoryOperator = apply { KMemory.map.remove(key) }
+    fun remove(): MemoryAccess = apply { KMemory.map.remove(key) }
 
     //override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
     //getOrDefault since jdk1.8
     //map.getOrDefault(key, defValue as Any) as T
 
-    override fun reset(): MemoryOperator = apply {
+    override fun reset(): MemoryAccess = apply {
         key = null
         value = null
         default = null
@@ -52,5 +52,5 @@ class MemoryOperator internal constructor() : PoolRecycler<MemoryOperator>() {
 }
 
 interface IMemory {
-    fun operator(): MemoryOperator
+    fun access(): MemoryAccess
 }

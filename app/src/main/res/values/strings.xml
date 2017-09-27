@@ -22,4 +22,10 @@
     <string name="post_and_remove">post_and_remove</string>
     <string name="post_and_remove_all">post_and_remove_all</string>
     <string name="post_delay">post_delay</string>
+    <string name="put_string">put_string</string>
+    <string name="get_string">get_string</string>
+    <string name="put_obj">put_obj</string>
+    <string name="get_obj">get_obj</string>
+    <string name="memory_text">memory_text</string>
+    <string name="get_default">get_default</string>
 </resources>

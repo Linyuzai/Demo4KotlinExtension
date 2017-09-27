@@ -18,32 +18,32 @@ internal object KHandler : IHandler {
     internal val handler: Handler = Handler(Looper.getMainLooper())
     internal val runnableList: Vector<Runnable> = Vector()
 
-    override fun operator(): HandlerOperator = pool().get(POOL_KEY)
+    override fun access(): HandlerAccess = pool().get(POOL_KEY)
 }
 
-class HandlerOperator internal constructor() : PoolRecycler<HandlerOperator>() {
+class HandlerAccess internal constructor() : PoolRecycler<HandlerAccess>() {
 
     private var runnable: Runnable? = null
 
     private var delay: Long = 0
 
-    fun runnable(runnable: Runnable): HandlerOperator = apply { this.runnable = runnable }
+    fun runnable(runnable: Runnable): HandlerAccess = apply { this.runnable = runnable }
 
-    fun runnable(runnable: () -> Unit): HandlerOperator = apply { this.runnable = Runnable { runnable.invoke() } }
+    fun runnable(runnable: () -> Unit): HandlerAccess = apply { this.runnable = Runnable { runnable.invoke() } }
 
-    fun delay(delay: Long): HandlerOperator = apply { this.delay = delay }
+    fun delay(delay: Long): HandlerAccess = apply { this.delay = delay }
 
-    fun post(): HandlerOperator = apply {
+    fun post(): HandlerAccess = apply {
         KHandler.runnableList.add(runnable)
         KHandler.handler.postDelayed(runnable, delay)
     }
 
-    fun intercept(): HandlerOperator = apply {
+    fun intercept(): HandlerAccess = apply {
         KHandler.runnableList.remove(runnable)
         KHandler.handler.removeCallbacks(runnable)
     }
 
-    fun clear(): HandlerOperator = apply {
+    fun clear(): HandlerAccess = apply {
         KHandler.runnableList.forEach {
             KHandler.handler.removeCallbacks(it)
         }
@@ -52,12 +52,12 @@ class HandlerOperator internal constructor() : PoolRecycler<HandlerOperator>() {
 
     //override fun recycle() = pool().recycle(KHandler.POOL_KEY, reset())
 
-    override fun reset(): HandlerOperator = apply {
+    override fun reset(): HandlerAccess = apply {
         runnable = null
         delay = 0
     }
 }
 
 interface IHandler {
-    fun operator(): HandlerOperator
+    fun access(): HandlerAccess
 }
