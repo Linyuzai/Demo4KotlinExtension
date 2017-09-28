@@ -28,4 +28,8 @@
     <string name="get_obj">get_obj</string>
     <string name="memory_text">memory_text</string>
     <string name="get_default">get_default</string>
+    <string name="get_color">get_color</string>
+    <string name="get_mipmap">get_mipmap</string>
+    <string name="get_drawable">get_drawable</string>
+    <string name="resource_text">resource_text</string>
 </resources>

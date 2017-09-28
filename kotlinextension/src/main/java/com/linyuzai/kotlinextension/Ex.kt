@@ -18,14 +18,16 @@ object Ex {
 
     internal var context: Context? = null
 
-    fun autoConfig(app: Application): Ex = bind(app)
-            .configHandler()
-            .configFile()
-            .configMemory()
-            .configResource()
-            .configShared()
-            .configAnim()
-            .configView()
+    fun autoConfig(app: Application) {
+        bind(app)
+        configHandler()
+        configFile()
+        configMemory()
+        configResource()
+        configShared()
+        configAnim()
+        configView()
+    }
 
     fun bind(app: Application): Ex = apply { this.context = app.applicationContext }
 

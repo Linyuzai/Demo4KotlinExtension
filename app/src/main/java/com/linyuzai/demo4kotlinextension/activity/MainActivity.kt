@@ -43,7 +43,7 @@ class MainActivity : AppCompatActivity() {
         mServiceButton.setOnClickListener { }
         mFileButton.setOnClickListener { }
         mMemoryButton.setOnClickListener { intent(MemoryActivity::class) }
-        mResourceButton.setOnClickListener { }
+        mResourceButton.setOnClickListener { intent(ResourceActivity::class) }
         mSharedButton.setOnClickListener { }
         mAlgorithmButton.setOnClickListener { }
         mLogButton.setOnClickListener { }

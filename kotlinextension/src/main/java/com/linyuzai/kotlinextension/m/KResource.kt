@@ -28,6 +28,8 @@ class ResourceAccess internal constructor() : PoolRecycler<ResourceAccess>() {
     private var resId: Int = 0
     private var theme: Resources.Theme? = null
 
+    fun resId(id: Int): ResourceAccess = apply { this.resId = id }
+
     fun drawable(onGet: (drawable: Drawable) -> Unit): ResourceAccess = apply {
         onGet.invoke(
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -35,6 +37,8 @@ class ResourceAccess internal constructor() : PoolRecycler<ResourceAccess>() {
                 else
                     KResource.res.getDrawable(resId))
     }
+
+    fun mipmap(onGet: (drawable: Drawable) -> Unit): ResourceAccess = drawable(onGet)
 
     fun color(onGet: (color: Int) -> Unit): ResourceAccess = apply {
         onGet.invoke(
