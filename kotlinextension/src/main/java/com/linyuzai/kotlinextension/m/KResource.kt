@@ -24,7 +24,7 @@ internal object KResource : IResource {
     override fun access(): ResourceAccess = pool().get(POOL_KEY)
 }
 
-class ResourceAccess internal constructor() : PoolRecycler<ResourceAccess>() {
+class ResourceAccess internal constructor() : PoolRecycler() {
     private var resId: Int = 0
     private var theme: Resources.Theme? = null
 
@@ -52,7 +52,7 @@ class ResourceAccess internal constructor() : PoolRecycler<ResourceAccess>() {
 
     //override fun recycle() = pool().recycle(KMemory.POOL_KEY, reset())
 
-    override fun reset(): ResourceAccess = apply {
+    override fun reset() {
         resId = 0
         theme = null
     }

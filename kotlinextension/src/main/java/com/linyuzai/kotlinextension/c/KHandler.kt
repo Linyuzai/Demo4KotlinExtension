@@ -21,7 +21,7 @@ internal object KHandler : IHandler {
     override fun access(): HandlerAccess = pool().get(POOL_KEY)
 }
 
-class HandlerAccess internal constructor() : PoolRecycler<HandlerAccess>() {
+class HandlerAccess internal constructor() : PoolRecycler() {
 
     private var runnable: Runnable? = null
 
@@ -52,7 +52,7 @@ class HandlerAccess internal constructor() : PoolRecycler<HandlerAccess>() {
 
     //override fun recycle() = pool().recycle(KHandler.POOL_KEY, reset())
 
-    override fun reset(): HandlerAccess = apply {
+    override fun reset() {
         runnable = null
         delay = 0
     }

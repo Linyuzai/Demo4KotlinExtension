@@ -34,7 +34,7 @@ internal object KPool : IPool {
     override fun builder(): PoolBuilder = get(POOL_KEY)
 
     @Suppress("UNCHECKED_CAST")
-    override fun <T : PoolRecycler<T>> get(tag: String): T {
+    override fun <T : PoolRecycler> get(tag: String): T {
         synchronized(poolMap) {
             if (poolMap.contains(tag)) {
                 return (poolMap[tag]!!.poll() ?: creatorMap[tag]!!.invoke().apply { (this as T).poolTag = tag }) as T
@@ -54,7 +54,7 @@ internal object KPool : IPool {
 /**
  * the builder to build a pool in pool
  */
-class PoolBuilder internal constructor() : PoolRecycler<PoolBuilder>() {
+class PoolBuilder internal constructor() : PoolRecycler() {
     /**
      * the tag to get a instance
      */
@@ -87,9 +87,12 @@ class PoolBuilder internal constructor() : PoolRecycler<PoolBuilder>() {
         }
     }
 
-    override fun recycle() = pool().recycle(KPool.POOL_KEY, reset())
+    override fun recycle() {
+        reset()
+        pool().recycle(KPool.POOL_KEY, this)
+    }
 
-    override fun reset(): PoolBuilder = apply {
+    override fun reset() {
         tag = null
         from = null
     }
@@ -111,7 +114,7 @@ interface IPool {
      * get a instance from pool by tag
      * @see KPool.get
      */
-    fun <T : PoolRecycler<T>> get(tag: String): T
+    fun <T : PoolRecycler> get(tag: String): T
 
     /**
      * recycle a instance into pool by tag
@@ -123,17 +126,20 @@ interface IPool {
 /**
  * Pool recycler is used to recycle for pool
  */
-abstract class PoolRecycler<out T> {
+abstract class PoolRecycler {
     internal var poolTag: String? = null
 
     /**
      * The object extends this would be recycled
      * @see KPool.recycle
      */
-    open fun recycle() = pool().recycle(poolTag!!, reset() as Any)
+    open fun recycle() {
+        reset()
+        pool().recycle(poolTag!!, this)
+    }
 
     /**
      * Reset the Object before recycled
      */
-    abstract fun reset(): T
+    abstract fun reset()
 }

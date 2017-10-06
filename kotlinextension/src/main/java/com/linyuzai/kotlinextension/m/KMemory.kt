@@ -19,7 +19,7 @@ internal object KMemory : IMemory {
 }
 
 @Suppress("UNCHECKED_CAST")
-class MemoryAccess internal constructor() : PoolRecycler<MemoryAccess>() {
+class MemoryAccess internal constructor() : PoolRecycler() {
 
     private var key: String? = null
 
@@ -44,7 +44,7 @@ class MemoryAccess internal constructor() : PoolRecycler<MemoryAccess>() {
     //getOrDefault since jdk1.8
     //map.getOrDefault(key, defValue as Any) as T
 
-    override fun reset(): MemoryAccess = apply {
+    override fun reset() {
         key = null
         value = null
         default = null

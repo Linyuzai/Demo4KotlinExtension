@@ -19,7 +19,7 @@ internal object KAnim : IAnim {
     override fun access(): AnimAccess = pool().get(POOL_KEY)
 }
 
-class AnimAccess internal constructor() : PoolRecycler<AnimAccess>() {
+class AnimAccess internal constructor() : PoolRecycler() {
 
     private var view: View? = null
 
@@ -106,7 +106,7 @@ class AnimAccess internal constructor() : PoolRecycler<AnimAccess>() {
 
     //override fun recycle() = pool().recycle(KAnim.POOL_KEY, reset())
 
-    override fun reset(): AnimAccess = apply {
+    override fun reset() {
         view = null
         from = 0f
         to = 0f

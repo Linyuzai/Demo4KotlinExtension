@@ -37,8 +37,10 @@ class PoolActivity : AppCompatActivity() {
         }
     }
 
-    private inner class Builder : PoolRecycler<Builder>() {
+    private inner class Builder : PoolRecycler() {
 
-        override fun reset(): Builder = apply {}
+        override fun reset() {
+
+        }
     }
 }

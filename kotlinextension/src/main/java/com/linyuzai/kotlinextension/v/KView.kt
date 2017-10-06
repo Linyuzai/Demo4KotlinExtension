@@ -16,7 +16,7 @@ internal object KView : IView {
     override fun access(): ViewAccess = pool().get(POOL_KEY)
 }
 
-class ViewAccess internal constructor() : PoolRecycler<ViewAccess>() {
+class ViewAccess internal constructor() : PoolRecycler() {
 
     private var views: Array<out View>? = null
 
@@ -51,7 +51,7 @@ class ViewAccess internal constructor() : PoolRecycler<ViewAccess>() {
 
     //override fun recycle() = pool().recycle(KView.POOL_KEY, reset())
 
-    override fun reset(): ViewAccess = apply {
+    override fun reset() {
         views = null
         isNullSafe = true
     }

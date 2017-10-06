@@ -16,7 +16,7 @@ internal object KFile : IFile {
     override fun access(): FileAccess = pool().get(POOL_KEY)
 }
 
-class FileAccess internal constructor() : PoolRecycler<FileAccess>() {
+class FileAccess internal constructor() : PoolRecycler() {
 
     private var file: String? = null
 
@@ -45,7 +45,7 @@ class FileAccess internal constructor() : PoolRecycler<FileAccess>() {
 
     //override fun recycle() = pool().recycle(KFile.POOL_KEY, reset())
 
-    override fun reset(): FileAccess = apply {
+    override fun reset() {
         file = null
         dir = null
     }

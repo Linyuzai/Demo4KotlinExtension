@@ -28,7 +28,7 @@ internal object KShared : IShared {
 
 }
 
-class SharedAccess internal constructor() : PoolRecycler<SharedAccess>() {
+class SharedAccess internal constructor() : PoolRecycler() {
     private var key: String? = null
     private var value: Any? = null
     private var default: Any? = null
@@ -96,7 +96,6 @@ class SharedAccess internal constructor() : PoolRecycler<SharedAccess>() {
             return
         }
         put("${KShared.PREFIX}$key${KShared.SIZE}", array.size)
-        var index = 0
         for (i in array.indices) {
             put("${KShared.PREFIX}$key${KShared.PREFIX}$i", array[i])
         }
@@ -145,7 +144,7 @@ class SharedAccess internal constructor() : PoolRecycler<SharedAccess>() {
 
     //override fun recycle() = pool().recycle(KShared.POOL_KEY, reset())
 
-    override fun reset(): SharedAccess = apply {
+    override fun reset() {
         key = null
         value = null
         default = null
