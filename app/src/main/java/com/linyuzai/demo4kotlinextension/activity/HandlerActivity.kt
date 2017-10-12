@@ -36,7 +36,7 @@ class HandlerActivity : AppCompatActivity() {
         mPostAndRemoveAllButton.setOnClickListener {
             handler().access().runnable { mHandlerText.text = "post and remove all 1" }.post().recycle()
             handler().access().runnable { mHandlerText.text = "post and remove all 2" }.delay(3000).post().recycle()
-            handler().access().clear()
+            //handler().access().clear()
         }
     }
 }

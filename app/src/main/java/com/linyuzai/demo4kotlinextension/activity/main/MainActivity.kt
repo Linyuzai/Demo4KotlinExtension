@@ -1,9 +1,13 @@
-package com.linyuzai.demo4kotlinextension.activity
+package com.linyuzai.demo4kotlinextension.activity.main
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import com.linyuzai.demo4kotlinextension.R
+import com.linyuzai.demo4kotlinextension.activity.HandlerActivity
+import com.linyuzai.demo4kotlinextension.activity.MemoryActivity
+import com.linyuzai.demo4kotlinextension.activity.PoolActivity
+import com.linyuzai.demo4kotlinextension.activity.ResourceActivity
 import com.linyuzai.kotlinextension.*
 
 class MainActivity : AppCompatActivity() {

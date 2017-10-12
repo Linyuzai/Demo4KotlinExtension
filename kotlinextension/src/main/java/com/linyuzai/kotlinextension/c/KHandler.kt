@@ -33,22 +33,9 @@ class HandlerAccess internal constructor() : PoolRecycler() {
 
     fun delay(delay: Long): HandlerAccess = apply { this.delay = delay }
 
-    fun post(): HandlerAccess = apply {
-        KHandler.runnableList.add(runnable)
-        KHandler.handler.postDelayed(runnable, delay)
-    }
+    fun post(): HandlerAccess = apply { KHandler.handler.postDelayed(runnable, delay) }
 
-    fun intercept(): HandlerAccess = apply {
-        KHandler.runnableList.remove(runnable)
-        KHandler.handler.removeCallbacks(runnable)
-    }
-
-    fun clear(): HandlerAccess = apply {
-        KHandler.runnableList.forEach {
-            KHandler.handler.removeCallbacks(it)
-        }
-        KHandler.runnableList.clear()
-    }
+    fun intercept(): HandlerAccess = apply { KHandler.handler.removeCallbacks(runnable) }
 
     //override fun recycle() = pool().recycle(KHandler.POOL_KEY, reset())
 
